@@ -49,6 +49,24 @@
     opacity: .72;
 }
 
+.to-textarea {
+    min-height: 7rem;
+    resize: vertical;
+}
+
+.to-select {
+    appearance: none;
+    padding-right: var(--to-ref-space-10);
+    background-image:
+        linear-gradient(45deg, transparent 50%, var(--to-sys-color-text-muted) 50%),
+        linear-gradient(135deg, var(--to-sys-color-text-muted) 50%, transparent 50%);
+    background-position:
+        calc(100% - 1rem) 50%,
+        calc(100% - .75rem) 50%;
+    background-size: .25rem .25rem, .25rem .25rem;
+    background-repeat: no-repeat;
+}
+
 .to-field__message {
     margin: 0;
     color: var(--to-sys-color-text-muted);
