@@ -9,6 +9,7 @@
  * @var string|null $primaryActionLabel
  * @var string|null $primaryActionHref
  * @var string|null $bulkActionLabel
+ * @var int|null $resultCount
  */
 
 $searchName = $searchName ?? 'q';
@@ -17,17 +18,32 @@ $searchPlaceholder = $searchPlaceholder ?? 'Buscar registros...';
 $primaryActionLabel = $primaryActionLabel ?? null;
 $primaryActionHref = $primaryActionHref ?? null;
 $bulkActionLabel = $bulkActionLabel ?? 'Acciones masivas';
+$resultCount = $resultCount ?? null;
+$searchId = 'table-search-' . preg_replace('/[^a-zA-Z0-9_-]/', '-', $searchName);
 ?>
 <div class="to-table-toolbar" data-table-toolbar>
-    <div class="to-table-toolbar__search">
-        <label class="to-sr-only" for="<?= esc($searchName) ?>"><?= esc($searchPlaceholder) ?></label>
-        <input id="<?= esc($searchName) ?>"
-               class="to-input"
-               type="search"
-               name="<?= esc($searchName) ?>"
-               value="<?= esc($searchValue) ?>"
-               placeholder="<?= esc($searchPlaceholder) ?>"
-               data-table-search>
+    <div class="to-table-toolbar__search-group">
+        <div class="to-table-toolbar__search">
+            <label class="to-sr-only" for="<?= esc($searchId) ?>"><?= esc($searchPlaceholder) ?></label>
+            <input id="<?= esc($searchId) ?>"
+                   class="to-input"
+                   type="search"
+                   name="<?= esc($searchName) ?>"
+                   value="<?= esc($searchValue) ?>"
+                   placeholder="<?= esc($searchPlaceholder) ?>"
+                   autocomplete="off"
+                   data-table-search>
+        </div>
+        <button type="button"
+                class="to-btn to-btn--ghost to-table-toolbar__clear"
+                data-table-clear-search>
+            Limpiar
+        </button>
+        <?php if ($resultCount !== null): ?>
+            <span class="to-table-toolbar__results" aria-live="polite">
+                <strong data-table-result-count><?= esc((string) $resultCount) ?></strong> resultados
+            </span>
+        <?php endif ?>
     </div>
 
     <div class="to-table-toolbar__actions">
