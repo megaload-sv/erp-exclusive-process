@@ -45,6 +45,7 @@ $columns = [
         'resultCount' => count($customers),
         'tableId' => 'customers-table',
         'columns' => $columns,
+        'defaultDensity' => 'comfortable',
     ]) ?>
 
     <?= view('components/tables/filter-chips', [
