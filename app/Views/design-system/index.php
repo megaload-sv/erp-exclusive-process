@@ -13,7 +13,7 @@
             <p>Referencia viva para construir interfaces consistentes, accesibles y mantenibles.</p>
         </div>
         <?= view('components/ui/badge', [
-            'label' => 'PR-003',
+            'label' => 'PR-004',
             'variant' => 'info',
         ]) ?>
     </div>
@@ -43,11 +43,11 @@
         </header>
         <div class="to-card__body">
             <ul class="check-list">
-                <li>Tokens de referencia y semánticos</li>
-                <li>Tema claro predeterminado</li>
-                <li>Preparación para tema oscuro</li>
-                <li>Accesibilidad y movimiento reducido</li>
-                <li>Button y Badge reutilizables</li>
+                <li>Foundations y temas</li>
+                <li>Button, Badge y Card</li>
+                <li>Input accesible y reutilizable</li>
+                <li>Estados normal, ayuda, error y deshabilitado</li>
+                <li>Validación visual en catálogo vivo</li>
             </ul>
         </div>
     </article>
@@ -60,10 +60,7 @@
             <h2>Button</h2>
             <p>Acciones principales, secundarias, discretas y destructivas.</p>
         </div>
-        <?= view('components/ui/badge', [
-            'label' => 'Ready',
-            'variant' => 'success',
-        ]) ?>
+        <?= view('components/ui/badge', ['label' => 'Ready', 'variant' => 'success']) ?>
     </div>
 
     <div class="to-component-preview" aria-label="Variantes del componente Button">
@@ -82,10 +79,7 @@
             <h2>Badge</h2>
             <p>Estados compactos para procesos, registros y condiciones operativas.</p>
         </div>
-        <?= view('components/ui/badge', [
-            'label' => 'Ready',
-            'variant' => 'success',
-        ]) ?>
+        <?= view('components/ui/badge', ['label' => 'Ready', 'variant' => 'success']) ?>
     </div>
 
     <div class="to-component-preview" aria-label="Variantes del componente Badge">
@@ -94,6 +88,56 @@
         <?= view('components/ui/badge', ['label' => 'Pendiente', 'variant' => 'warning']) ?>
         <?= view('components/ui/badge', ['label' => 'Error', 'variant' => 'danger']) ?>
         <?= view('components/ui/badge', ['label' => 'Información', 'variant' => 'info']) ?>
+    </div>
+</section>
+
+<section class="content-panel">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Enterprise Forms</p>
+            <h2>Input Field</h2>
+            <p>Unidad de captura con etiqueta, ayuda, validación y atributos accesibles.</p>
+        </div>
+        <?= view('components/ui/badge', ['label' => 'In progress', 'variant' => 'info']) ?>
+    </div>
+
+    <div class="to-catalog-grid" aria-label="Estados del componente Input">
+        <article class="to-card">
+            <div class="to-card__body">
+                <?= view('components/ui/input', [
+                    'name' => 'customer_name',
+                    'label' => 'Nombre del cliente',
+                    'placeholder' => 'Ej. Megaload Logistics',
+                    'hint' => 'Utiliza el nombre comercial registrado.',
+                    'required' => true,
+                ]) ?>
+            </div>
+        </article>
+
+        <article class="to-card">
+            <div class="to-card__body">
+                <?= view('components/ui/input', [
+                    'name' => 'customer_email',
+                    'label' => 'Correo electrónico',
+                    'type' => 'email',
+                    'value' => 'correo-invalido',
+                    'error' => 'Ingresa una dirección de correo válida.',
+                    'required' => true,
+                ]) ?>
+            </div>
+        </article>
+
+        <article class="to-card">
+            <div class="to-card__body">
+                <?= view('components/ui/input', [
+                    'name' => 'system_code',
+                    'label' => 'Código generado',
+                    'value' => 'TO-CUS-0001',
+                    'disabled' => true,
+                    'hint' => 'Este valor es administrado por el sistema.',
+                ]) ?>
+            </div>
+        </article>
     </div>
 </section>
 <?= $this->endSection() ?>
