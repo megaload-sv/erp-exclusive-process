@@ -45,7 +45,7 @@
             <ul class="check-list">
                 <li>Foundations y temas</li>
                 <li>Button, Badge y Card</li>
-                <li>Input accesible y reutilizable</li>
+                <li>Input, Textarea y Select accesibles</li>
                 <li>Estados normal, ayuda, error y deshabilitado</li>
                 <li>Validación visual en catálogo vivo</li>
             </ul>
@@ -98,7 +98,7 @@
             <h2>Input Field</h2>
             <p>Unidad de captura con etiqueta, ayuda, validación y atributos accesibles.</p>
         </div>
-        <?= view('components/ui/badge', ['label' => 'In progress', 'variant' => 'info']) ?>
+        <?= view('components/ui/badge', ['label' => 'Ready', 'variant' => 'success']) ?>
     </div>
 
     <div class="to-catalog-grid" aria-label="Estados del componente Input">
@@ -135,6 +135,90 @@
                     'value' => 'TO-CUS-0001',
                     'disabled' => true,
                     'hint' => 'Este valor es administrado por el sistema.',
+                ]) ?>
+            </div>
+        </article>
+    </div>
+</section>
+
+<section class="content-panel">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Enterprise Forms</p>
+            <h2>Textarea</h2>
+            <p>Captura de observaciones y contenido extenso con altura adaptable.</p>
+        </div>
+        <?= view('components/ui/badge', ['label' => 'Ready', 'variant' => 'success']) ?>
+    </div>
+
+    <div class="to-catalog-grid" aria-label="Estados del componente Textarea">
+        <article class="to-card">
+            <div class="to-card__body">
+                <?= view('components/ui/textarea', [
+                    'name' => 'operation_notes',
+                    'label' => 'Observaciones operativas',
+                    'placeholder' => 'Describe instrucciones, restricciones o condiciones especiales.',
+                    'hint' => 'Máximo recomendado: 500 caracteres.',
+                    'required' => true,
+                ]) ?>
+            </div>
+        </article>
+
+        <article class="to-card">
+            <div class="to-card__body">
+                <?= view('components/ui/textarea', [
+                    'name' => 'rejection_reason',
+                    'label' => 'Motivo de rechazo',
+                    'value' => 'Información incompleta.',
+                    'error' => 'Explica el motivo con mayor detalle.',
+                    'required' => true,
+                ]) ?>
+            </div>
+        </article>
+    </div>
+</section>
+
+<section class="content-panel">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Enterprise Forms</p>
+            <h2>Select</h2>
+            <p>Selección consistente de estados, categorías y entidades relacionadas.</p>
+        </div>
+        <?= view('components/ui/badge', ['label' => 'Ready', 'variant' => 'success']) ?>
+    </div>
+
+    <div class="to-catalog-grid" aria-label="Estados del componente Select">
+        <article class="to-card">
+            <div class="to-card__body">
+                <?= view('components/ui/select', [
+                    'name' => 'operation_status',
+                    'label' => 'Estado de la operación',
+                    'placeholder' => 'Selecciona un estado',
+                    'options' => [
+                        'draft' => 'Borrador',
+                        'pending' => 'Pendiente',
+                        'approved' => 'Aprobada',
+                    ],
+                    'hint' => 'El estado controla las acciones disponibles.',
+                    'required' => true,
+                ]) ?>
+            </div>
+        </article>
+
+        <article class="to-card">
+            <div class="to-card__body">
+                <?= view('components/ui/select', [
+                    'name' => 'priority',
+                    'label' => 'Prioridad',
+                    'placeholder' => 'Selecciona una prioridad',
+                    'options' => [
+                        'low' => 'Baja',
+                        'medium' => 'Media',
+                        'high' => 'Alta',
+                    ],
+                    'error' => 'Debes seleccionar una prioridad.',
+                    'required' => true,
                 ]) ?>
             </div>
         </article>
