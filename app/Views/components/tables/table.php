@@ -33,6 +33,7 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
 ?>
 <div class="to-table-container<?= $loading ? ' is-loading' : '' ?>"
      data-table-container
+     data-table-id="<?= esc($id) ?>"
      aria-busy="<?= $loading ? 'true' : 'false' ?>">
     <div class="to-table-scroll" tabindex="0" role="region" aria-label="<?= esc($caption ?? 'Tabla de datos') ?>">
         <table id="<?= esc($id) ?>" class="to-table">
@@ -55,11 +56,17 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
                     $key = (string) ($column['key'] ?? '');
                     $label = (string) ($column['label'] ?? $key);
                     $sortable = (bool) ($column['sortable'] ?? false);
+                    $visible = (bool) ($column['visible'] ?? true);
                     $align = in_array(($column['align'] ?? 'start'), ['start', 'center', 'end'], true)
                         ? $column['align']
                         : 'start';
+                    $width = isset($column['width']) ? (string) $column['width'] : null;
                     ?>
-                    <th scope="col" class="to-table__cell--<?= esc($align) ?>">
+                    <th scope="col"
+                        class="to-table__cell--<?= esc($align) ?>"
+                        data-column="<?= esc($key) ?>"
+                        <?= $visible ? '' : 'hidden' ?>
+                        <?= $width !== null ? 'style="width:' . esc($width) . '"' : '' ?>>
                         <?php if ($sortable): ?>
                             <button type="button"
                                     class="to-table__sort"
@@ -84,7 +91,10 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
                             <td class="to-table__selection"><span class="to-skeleton to-skeleton--checkbox"></span></td>
                         <?php endif ?>
                         <?php foreach ($columns as $columnIndex => $column): ?>
-                            <td><span class="to-skeleton<?= $columnIndex === 1 ? ' to-skeleton--wide' : '' ?>"></span></td>
+                            <?php $visible = (bool) ($column['visible'] ?? true); ?>
+                            <td data-column="<?= esc((string) ($column['key'] ?? '')) ?>" <?= $visible ? '' : 'hidden' ?>>
+                                <span class="to-skeleton<?= $columnIndex === 1 ? ' to-skeleton--wide' : '' ?>"></span>
+                            </td>
                         <?php endforeach ?>
                     </tr>
                 <?php endfor ?>
@@ -126,12 +136,15 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
                         <?php foreach ($columns as $column): ?>
                             <?php
                             $key = (string) ($column['key'] ?? '');
+                            $visible = (bool) ($column['visible'] ?? true);
                             $align = in_array(($column['align'] ?? 'start'), ['start', 'center', 'end'], true)
                                 ? $column['align']
                                 : 'start';
                             $value = $row[$key] ?? '';
                             ?>
-                            <td class="to-table__cell--<?= esc($align) ?>" data-column="<?= esc($key) ?>">
+                            <td class="to-table__cell--<?= esc($align) ?>"
+                                data-column="<?= esc($key) ?>"
+                                <?= $visible ? '' : 'hidden' ?>>
                                 <?php if (isset($column['render']) && is_callable($column['render'])): ?>
                                     <?= $column['render']($value, $row) ?>
                                 <?php else: ?>
