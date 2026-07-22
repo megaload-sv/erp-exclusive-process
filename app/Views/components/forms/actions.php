@@ -4,6 +4,7 @@
  * TraceOps form actions component.
  *
  * @var string|null $submitLabel
+ * @var string|null $submitLoadingLabel
  * @var string|null $cancelLabel
  * @var string|null $cancelHref
  * @var bool|null $submitDisabled
@@ -11,6 +12,7 @@
  */
 
 $submitLabel = $submitLabel ?? 'Guardar cambios';
+$submitLoadingLabel = $submitLoadingLabel ?? 'Guardando...';
 $cancelLabel = $cancelLabel ?? 'Cancelar';
 $cancelHref = $cancelHref ?? null;
 $submitDisabled = $submitDisabled ?? false;
@@ -32,9 +34,11 @@ $note = $note ?? null;
         ]) ?>
         <?= view('components/ui/button', [
             'label' => $submitLabel,
+            'loadingLabel' => $submitLoadingLabel,
             'variant' => 'primary',
             'type' => 'submit',
             'disabled' => $submitDisabled,
+            'attributes' => ['data-form-submit' => 'true'],
         ]) ?>
     </div>
 </footer>
