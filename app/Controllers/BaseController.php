@@ -21,6 +21,9 @@ abstract class BaseController extends Controller
 
     protected TraceOps $traceOps;
 
+    /** @var array<string, mixed> */
+    protected array $viewData = [];
+
     /**
      * @return void
      */
@@ -33,6 +36,7 @@ abstract class BaseController extends Controller
         $this->traceOps = $traceOps;
 
         date_default_timezone_set($this->traceOps->timezone);
+        $this->viewData = $this->sharedViewData();
     }
 
     /**
@@ -43,10 +47,12 @@ abstract class BaseController extends Controller
     protected function sharedViewData(): array
     {
         return [
-            'traceOps' => $this->traceOps,
-            'appName'  => $this->traceOps->name,
-            'version'  => $this->traceOps->version,
-            'modules'  => $this->traceOps->modules,
+            'traceOps'       => $this->traceOps,
+            'appName'        => $this->traceOps->name,
+            'appVersion'     => $this->traceOps->version,
+            'tagline'        => $this->traceOps->tagline,
+            'company'        => $this->traceOps->company,
+            'moduleRegistry' => $this->traceOps->modules,
         ];
     }
 }
