@@ -84,3 +84,93 @@
 .to-field--error .to-input:focus-visible {
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--to-sys-color-danger) 22%, transparent);
 }
+
+.to-form {
+    display: grid;
+    gap: var(--to-ref-space-6);
+}
+
+.to-form-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--to-ref-space-5);
+}
+
+.to-form-grid > * {
+    grid-column: span 12;
+}
+
+.to-form-section {
+    overflow: hidden;
+    border: 1px solid var(--to-sys-color-border);
+    border-radius: var(--to-sys-radius-container);
+    background: var(--to-sys-color-surface);
+    box-shadow: var(--to-sys-shadow-container);
+}
+
+.to-form-section__header {
+    padding: var(--to-ref-space-5);
+    border-bottom: 1px solid var(--to-sys-color-border);
+}
+
+.to-form-section__header h3,
+.to-form-section__header p {
+    margin: 0;
+}
+
+.to-form-section__header h3 {
+    color: var(--to-sys-color-text);
+    font-size: var(--to-ref-font-size-lg);
+}
+
+.to-form-section__header p {
+    margin-top: var(--to-ref-space-1);
+    color: var(--to-sys-color-text-muted);
+    font-size: var(--to-ref-font-size-sm);
+}
+
+.to-form-section__body {
+    padding: var(--to-ref-space-5);
+}
+
+.to-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--to-ref-space-4);
+    padding: var(--to-ref-space-5);
+    border: 1px solid var(--to-sys-color-border);
+    border-radius: var(--to-sys-radius-container);
+    background: var(--to-sys-color-surface);
+}
+
+.to-form-actions__meta p {
+    margin: 0;
+    color: var(--to-sys-color-text-muted);
+    font-size: var(--to-ref-font-size-sm);
+}
+
+.to-form-actions__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--to-ref-space-3);
+}
+
+@media (min-width: 48rem) {
+    .to-form-grid__col--6 { grid-column: span 6; }
+    .to-form-grid__col--4 { grid-column: span 4; }
+    .to-form-grid__col--8 { grid-column: span 8; }
+}
+
+@media (max-width: 47.99rem) {
+    .to-form-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .to-form-actions__buttons,
+    .to-form-actions__buttons .to-btn {
+        width: 100%;
+    }
+}
