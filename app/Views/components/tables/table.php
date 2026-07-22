@@ -9,6 +9,10 @@
  * @var array<int, array<string, mixed>> $rows
  * @var bool|null $selectable
  * @var string|null $rowKey
+ * @var bool|null $loading
+ * @var int|null $skeletonRows
+ * @var string|null $errorTitle
+ * @var string|null $errorDescription
  * @var string|null $emptyTitle
  * @var string|null $emptyDescription
  */
@@ -19,11 +23,17 @@ $columns = $columns ?? [];
 $rows = $rows ?? [];
 $selectable = $selectable ?? false;
 $rowKey = $rowKey ?? 'id';
+$loading = $loading ?? false;
+$skeletonRows = max(1, $skeletonRows ?? 5);
+$errorTitle = $errorTitle ?? null;
+$errorDescription = $errorDescription ?? 'Intenta nuevamente o actualiza la página.';
 $emptyTitle = $emptyTitle ?? 'No hay registros disponibles';
 $emptyDescription = $emptyDescription ?? 'Los registros aparecerán aquí cuando estén disponibles.';
 $columnCount = count($columns) + ($selectable ? 1 : 0);
 ?>
-<div class="to-table-container" data-table-container>
+<div class="to-table-container<?= $loading ? ' is-loading' : '' ?>"
+     data-table-container
+     aria-busy="<?= $loading ? 'true' : 'false' ?>">
     <div class="to-table-scroll" tabindex="0" role="region" aria-label="<?= esc($caption ?? 'Tabla de datos') ?>">
         <table id="<?= esc($id) ?>" class="to-table">
             <?php if ($caption !== null): ?>
@@ -36,7 +46,8 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
                         <input type="checkbox"
                                class="to-table__checkbox"
                                data-table-select-all
-                               aria-label="Seleccionar todos los registros">
+                               aria-label="Seleccionar todos los registros"
+                               <?= $loading || $errorTitle !== null ? 'disabled' : '' ?>>
                     </th>
                 <?php endif ?>
                 <?php foreach ($columns as $column): ?>
@@ -53,7 +64,8 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
                             <button type="button"
                                     class="to-table__sort"
                                     data-table-sort="<?= esc($key) ?>"
-                                    aria-sort="none">
+                                    aria-sort="none"
+                                    <?= $loading || $errorTitle !== null ? 'disabled' : '' ?>>
                                 <span><?= esc($label) ?></span>
                                 <span class="to-table__sort-icon" aria-hidden="true">↕</span>
                             </button>
@@ -65,10 +77,33 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
             </tr>
             </thead>
             <tbody>
-            <?php if ($rows === []): ?>
+            <?php if ($loading): ?>
+                <?php for ($rowIndex = 0; $rowIndex < $skeletonRows; $rowIndex++): ?>
+                    <tr class="to-table__skeleton-row" aria-hidden="true">
+                        <?php if ($selectable): ?>
+                            <td class="to-table__selection"><span class="to-skeleton to-skeleton--checkbox"></span></td>
+                        <?php endif ?>
+                        <?php foreach ($columns as $columnIndex => $column): ?>
+                            <td><span class="to-skeleton<?= $columnIndex === 1 ? ' to-skeleton--wide' : '' ?>"></span></td>
+                        <?php endforeach ?>
+                    </tr>
+                <?php endfor ?>
+            <?php elseif ($errorTitle !== null): ?>
                 <tr>
                     <td colspan="<?= esc((string) max($columnCount, 1)) ?>">
-                        <div class="to-table-empty">
+                        <div class="to-table-state to-table-state--error" role="alert">
+                            <span class="to-table-state__icon" aria-hidden="true">!</span>
+                            <strong><?= esc($errorTitle) ?></strong>
+                            <span><?= esc($errorDescription) ?></span>
+                            <button type="button" class="to-btn to-btn--secondary" data-table-retry>Reintentar</button>
+                        </div>
+                    </td>
+                </tr>
+            <?php elseif ($rows === []): ?>
+                <tr>
+                    <td colspan="<?= esc((string) max($columnCount, 1)) ?>">
+                        <div class="to-table-state">
+                            <span class="to-table-state__icon" aria-hidden="true">–</span>
                             <strong><?= esc($emptyTitle) ?></strong>
                             <span><?= esc($emptyDescription) ?></span>
                         </div>
