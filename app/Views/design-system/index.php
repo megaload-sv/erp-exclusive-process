@@ -1,5 +1,9 @@
 <?= $this->extend('layouts/dashboard') ?>
 
+<?= $this->section('styles') ?>
+<link rel="stylesheet" href="<?= base_url('assets/css/design-system-catalog.css') ?>">
+<?= $this->endSection() ?>
+
 <?= $this->section('content') ?>
 <section class="content-panel">
     <div class="section-heading">
