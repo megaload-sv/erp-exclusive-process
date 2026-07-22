@@ -2,9 +2,7 @@
 
 namespace App\Controllers;
 
-use CodeIgniter\Controller;
-
-final class DashboardController extends Controller
+final class DashboardController extends BaseController
 {
     public function index(): string
     {
@@ -18,23 +16,27 @@ final class DashboardController extends Controller
             $dbStatus = 'Unavailable';
         }
 
-        return view('dashboard/index', [
+        $modules = array_map(
+            static fn (array $module, string $key): array => [
+                'key'     => $key,
+                'label'   => $module['label'],
+                'route'   => $module['route'],
+                'icon'    => $module['icon'],
+                'enabled' => $module['enabled'],
+            ],
+            $this->traceOps->modules,
+            array_keys($this->traceOps->modules),
+        );
+
+        return view('dashboard/index', array_merge($this->viewData, [
             'title'       => 'Dashboard',
-            'appName'     => env('app.name', 'TraceOps ERP'),
-            'appVersion'  => env('app.version', '0.1.0-alpha'),
+            'tagline'     => $this->traceOps->tagline,
+            'company'     => $this->traceOps->company,
             'environment' => ENVIRONMENT,
             'phpVersion'  => PHP_VERSION,
             'ciVersion'   => \CodeIgniter\CodeIgniter::CI_VERSION,
             'dbStatus'    => $dbStatus,
-            'modules'     => [
-                'CRM',
-                'Customers',
-                'Operations',
-                'Workflow',
-                'Inventory',
-                'Accounting',
-                'Administration',
-            ],
-        ]);
+            'modules'     => $modules,
+        ]));
     }
 }
