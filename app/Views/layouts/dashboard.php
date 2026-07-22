@@ -7,6 +7,7 @@
     <title><?= esc($title ?? 'Dashboard') ?> | <?= esc($appName ?? 'TraceOps ERP') ?></title>
     <link rel="stylesheet" href="<?= base_url('assets/css/design-system.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
+    <?= $this->renderSection('styles') ?>
 </head>
 <body>
 <a class="to-sr-only" href="#main-content">Saltar al contenido principal</a>
