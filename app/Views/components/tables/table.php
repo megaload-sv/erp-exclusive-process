@@ -58,8 +58,9 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
                     $sortable = (bool) ($column['sortable'] ?? false);
                     $visible = (bool) ($column['visible'] ?? true);
                     $exportable = (bool) ($column['exportable'] ?? true);
-                    $align = in_array(($column['align'] ?? 'start'), ['start', 'center', 'end'], true)
-                        ? $column['align']
+                    $requestedAlign = (string) ($column['align'] ?? 'start');
+                    $align = in_array($requestedAlign, ['start', 'center', 'end'], true)
+                        ? $requestedAlign
                         : 'start';
                     $width = isset($column['width']) ? (string) $column['width'] : null;
                     ?>
@@ -145,8 +146,9 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
                             $key = (string) ($column['key'] ?? '');
                             $visible = (bool) ($column['visible'] ?? true);
                             $exportable = (bool) ($column['exportable'] ?? true);
-                            $align = in_array(($column['align'] ?? 'start'), ['start', 'center', 'end'], true)
-                                ? $column['align']
+                            $requestedAlign = (string) ($column['align'] ?? 'start');
+                            $align = in_array($requestedAlign, ['start', 'center', 'end'], true)
+                                ? $requestedAlign
                                 : 'start';
                             $value = $row[$key] ?? '';
                             ?>
