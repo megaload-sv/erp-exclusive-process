@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="TraceOps ERP — Gestión operativa con trazabilidad completa">
     <title><?= esc($title ?? 'Dashboard') ?> | <?= esc($appName ?? 'TraceOps ERP') ?></title>
+    <link rel="stylesheet" href="<?= base_url('assets/css/design-system.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
+    <?= $this->renderSection('styles') ?>
 </head>
 <body>
+<a class="to-sr-only" href="#main-content">Saltar al contenido principal</a>
 <div class="app-shell">
     <aside class="sidebar">
         <div class="brand">
@@ -60,14 +63,17 @@
         </div>
     </aside>
 
-    <main class="main-content">
+    <main id="main-content" class="main-content" tabindex="-1">
         <header class="topbar">
             <div>
                 <p class="eyebrow">Plataforma de gestión</p>
                 <h1><?= esc($title ?? 'Dashboard') ?></h1>
             </div>
             <div class="topbar-actions">
-                <span class="environment-badge"><?= esc(strtoupper(ENVIRONMENT)) ?></span>
+                <?= view('components/ui/badge', [
+                    'label' => strtoupper(ENVIRONMENT),
+                    'variant' => ENVIRONMENT === 'production' ? 'success' : 'warning',
+                ]) ?>
                 <div class="user-chip" aria-label="Usuario actual">
                     <span class="user-avatar">JL</span>
                     <span><strong>José Luis</strong><small>Administrador</small></span>
