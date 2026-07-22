@@ -3,8 +3,8 @@
 /**
  * TraceOps input field component.
  *
- * @var string $name
- * @var string $label
+ * @var string|null $name
+ * @var string|null $label
  * @var string|null $id
  * @var string|null $type
  * @var string|null $value
@@ -15,16 +15,20 @@
  * @var bool|null $disabled
  */
 
-$name = $name ?? '';
-$label = $label ?? '';
-$id = $id ?? $name;
-$type = $type ?? 'text';
-$value = $value ?? '';
-$placeholder = $placeholder ?? null;
-$hint = $hint ?? null;
-$error = $error ?? null;
-$required = $required ?? false;
-$disabled = $disabled ?? false;
+$name = trim((string) ($name ?? 'field'));
+$name = $name !== '' ? $name : 'field';
+$label = (string) ($label ?? 'Campo');
+$id = trim((string) ($id ?? $name));
+$id = $id !== '' ? $id : $name;
+$requestedType = (string) ($type ?? 'text');
+$allowedTypes = ['text', 'email', 'password', 'number', 'search', 'tel', 'url', 'date', 'time', 'datetime-local', 'month', 'week'];
+$type = in_array($requestedType, $allowedTypes, true) ? $requestedType : 'text';
+$value = is_scalar($value ?? '') ? (string) ($value ?? '') : '';
+$placeholder = isset($placeholder) && trim((string) $placeholder) !== '' ? (string) $placeholder : null;
+$hint = isset($hint) && trim((string) $hint) !== '' ? (string) $hint : null;
+$error = isset($error) && trim((string) $error) !== '' ? (string) $error : null;
+$required = (bool) ($required ?? false);
+$disabled = (bool) ($disabled ?? false);
 $descriptionId = $error !== null ? $id . '-error' : ($hint !== null ? $id . '-hint' : null);
 $fieldClass = 'to-field' . ($error !== null ? ' to-field--error' : '');
 ?>
