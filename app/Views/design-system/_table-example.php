@@ -26,13 +26,13 @@ $actionsRenderer = static function ($value, array $row): string {
 };
 
 $columns = [
-    ['key' => 'id', 'label' => 'Código', 'sortable' => true],
-    ['key' => 'customer', 'label' => 'Cliente', 'sortable' => true],
+    ['key' => 'id', 'label' => 'Código', 'sortable' => true, 'hideable' => false, 'width' => '8rem'],
+    ['key' => 'customer', 'label' => 'Cliente', 'sortable' => true, 'width' => '15rem'],
     ['key' => 'country', 'label' => 'País', 'sortable' => true],
     ['key' => 'status', 'label' => 'Estado', 'render' => $statusRenderer],
     ['key' => 'balance', 'label' => 'Balance', 'align' => 'end', 'sortable' => true],
     ['key' => 'updated_at', 'label' => 'Actualización', 'sortable' => true],
-    ['key' => 'actions', 'label' => 'Acciones', 'align' => 'end', 'render' => $actionsRenderer],
+    ['key' => 'actions', 'label' => 'Acciones', 'align' => 'end', 'render' => $actionsRenderer, 'hideable' => false],
 ];
 ?>
 <div class="to-table-section">
@@ -42,6 +42,9 @@ $columns = [
         'primaryActionLabel' => 'Nuevo cliente',
         'primaryActionHref' => '#new-customer',
         'bulkActionLabel' => 'Acciones masivas',
+        'resultCount' => count($customers),
+        'tableId' => 'customers-table',
+        'columns' => $columns,
     ]) ?>
 
     <?= view('components/tables/filter-chips', [
