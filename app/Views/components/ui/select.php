@@ -3,9 +3,9 @@
 /**
  * TraceOps select field component.
  *
- * @var string $name
- * @var string $label
- * @var array<int|string, string> $options
+ * @var string|null $name
+ * @var string|null $label
+ * @var array<int|string, scalar|null>|null $options
  * @var string|null $id
  * @var string|int|null $value
  * @var string|null $placeholder
@@ -15,16 +15,18 @@
  * @var bool|null $disabled
  */
 
-$name = $name ?? '';
-$label = $label ?? '';
-$options = $options ?? [];
-$id = $id ?? $name;
-$value = $value ?? null;
-$placeholder = $placeholder ?? null;
-$hint = $hint ?? null;
-$error = $error ?? null;
-$required = $required ?? false;
-$disabled = $disabled ?? false;
+$name = trim((string) ($name ?? 'field'));
+$name = $name !== '' ? $name : 'field';
+$label = (string) ($label ?? 'Selecciona una opción');
+$options = is_array($options ?? null) ? $options : [];
+$id = trim((string) ($id ?? $name));
+$id = $id !== '' ? $id : $name;
+$value = is_scalar($value ?? null) ? $value : null;
+$placeholder = isset($placeholder) && trim((string) $placeholder) !== '' ? (string) $placeholder : null;
+$hint = isset($hint) && trim((string) $hint) !== '' ? (string) $hint : null;
+$error = isset($error) && trim((string) $error) !== '' ? (string) $error : null;
+$required = (bool) ($required ?? false);
+$disabled = (bool) ($disabled ?? false);
 $descriptionId = $error !== null ? $id . '-error' : ($hint !== null ? $id . '-hint' : null);
 $fieldClass = 'to-field' . ($error !== null ? ' to-field--error' : '');
 ?>
@@ -48,8 +50,9 @@ $fieldClass = 'to-field' . ($error !== null ? ' to-field--error' : '');
         <?php endif ?>
 
         <?php foreach ($options as $optionValue => $optionLabel): ?>
+            <?php if (! is_scalar($optionLabel) && $optionLabel !== null) { continue; } ?>
             <option value="<?= esc((string) $optionValue) ?>" <?= (string) $value === (string) $optionValue ? 'selected' : '' ?>>
-                <?= esc($optionLabel) ?>
+                <?= esc((string) $optionLabel) ?>
             </option>
         <?php endforeach ?>
     </select>
