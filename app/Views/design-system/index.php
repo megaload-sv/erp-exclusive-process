@@ -12,7 +12,7 @@
             <h2>Catálogo de fundamentos y componentes</h2>
             <p>Referencia viva para construir interfaces consistentes, accesibles y mantenibles.</p>
         </div>
-        <?= view('components/ui/badge', ['label' => 'PR-005', 'variant' => 'info']) ?>
+        <?= view('components/ui/badge', ['label' => 'PR-005.1', 'variant' => 'info']) ?>
     </div>
 </section>
 
@@ -45,6 +45,7 @@
                 <li>Sistema empresarial de formularios</li>
                 <li>Tabla semántica y responsiva</li>
                 <li>Selección, ordenamiento y paginación</li>
+                <li>Hardening y pruebas visuales de robustez</li>
             </ul>
         </div>
     </article>
@@ -126,6 +127,18 @@
         <article class="to-card"><header class="to-card__header"><h3>Radio Group</h3></header><div class="to-card__body"><?= view('components/ui/radio-group', ['name' => 'approval_mode', 'label' => 'Modalidad de aprobación', 'options' => ['automatic' => 'Automática', 'manual' => 'Manual', 'supervisor' => 'Requiere supervisor'], 'selected' => 'manual', 'hint' => 'Selecciona una sola política para este proceso.', 'required' => true]) ?></div></article>
         <article class="to-card"><header class="to-card__header"><h3>Switch</h3></header><div class="to-card__body"><div class="to-form"><?= view('components/ui/switch', ['name' => 'notifications_enabled', 'label' => 'Notificaciones operativas', 'description' => 'Envía alertas cuando el proceso cambia de estado.', 'checked' => true]) ?><?= view('components/ui/switch', ['name' => 'audit_locked', 'label' => 'Auditoría obligatoria', 'description' => 'Configuración protegida por política corporativa.', 'checked' => true, 'disabled' => true]) ?></div></div></article>
     </div>
+</section>
+
+<section class="content-panel">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Quality Gate</p>
+            <h2>Pruebas visuales de robustez</h2>
+            <p>Configuraciones incompletas e inválidas que deben renderizarse con valores seguros, sin warnings ni errores fatales.</p>
+        </div>
+        <?= view('components/ui/badge', ['label' => 'Hardening', 'variant' => 'warning']) ?>
+    </div>
+    <?= view('design-system/_hardening-tests') ?>
 </section>
 
 <section class="content-panel">
