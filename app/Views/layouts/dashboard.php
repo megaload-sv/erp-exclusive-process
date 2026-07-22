@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="<?= base_url('assets/css/form-feedback.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/table-system.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/table-states.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/table-export.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
     <?= $this->renderSection('styles') ?>
 </head>
@@ -90,6 +91,7 @@
 </div>
 <script src="<?= base_url('assets/js/form-system.js') ?>" defer></script>
 <script src="<?= base_url('assets/js/table-system.js') ?>" defer></script>
+<script src="<?= base_url('assets/js/table-export.js') ?>" defer></script>
 <?= $this->renderSection('scripts') ?>
 </body>
 </html>
