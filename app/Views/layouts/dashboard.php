@@ -6,6 +6,7 @@
     <meta name="description" content="TraceOps ERP — Gestión operativa con trazabilidad completa">
     <title><?= esc($title ?? 'Dashboard') ?> | <?= esc($appName ?? 'TraceOps ERP') ?></title>
     <link rel="stylesheet" href="<?= base_url('assets/css/design-system.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/form-system.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
     <?= $this->renderSection('styles') ?>
 </head>
