@@ -1,12 +1,13 @@
 <div class="to-form">
     <?= view('components/forms/validation-summary', [
+        'id' => 'feedback-validation-summary',
         'errors' => [
             'feedback-customer-name' => 'El nombre del cliente es obligatorio.',
             'feedback-customer-email' => 'Ingresa una dirección de correo válida.',
         ],
     ]) ?>
 
-    <form class="to-form" action="<?= current_url() ?>" method="get">
+    <form class="to-form" action="<?= current_url() ?>" method="get" data-protect-submit>
         <div class="to-form-grid">
             <div class="to-form-grid__col--6">
                 <?= view('components/ui/input', [
