@@ -43,7 +43,7 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
             <thead>
             <tr>
                 <?php if ($selectable): ?>
-                    <th class="to-table__selection" scope="col">
+                    <th class="to-table__selection" scope="col" data-exportable="false">
                         <input type="checkbox"
                                class="to-table__checkbox"
                                data-table-select-all
@@ -57,6 +57,7 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
                     $label = (string) ($column['label'] ?? $key);
                     $sortable = (bool) ($column['sortable'] ?? false);
                     $visible = (bool) ($column['visible'] ?? true);
+                    $exportable = (bool) ($column['exportable'] ?? true);
                     $align = in_array(($column['align'] ?? 'start'), ['start', 'center', 'end'], true)
                         ? $column['align']
                         : 'start';
@@ -65,6 +66,7 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
                     <th scope="col"
                         class="to-table__cell--<?= esc($align) ?>"
                         data-column="<?= esc($key) ?>"
+                        data-exportable="<?= $exportable ? 'true' : 'false' ?>"
                         <?= $visible ? '' : 'hidden' ?>
                         <?= $width !== null ? 'style="width:' . esc($width) . '"' : '' ?>>
                         <?php if ($sortable): ?>
@@ -88,11 +90,16 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
                 <?php for ($rowIndex = 0; $rowIndex < $skeletonRows; $rowIndex++): ?>
                     <tr class="to-table__skeleton-row" aria-hidden="true">
                         <?php if ($selectable): ?>
-                            <td class="to-table__selection"><span class="to-skeleton to-skeleton--checkbox"></span></td>
+                            <td class="to-table__selection" data-exportable="false"><span class="to-skeleton to-skeleton--checkbox"></span></td>
                         <?php endif ?>
                         <?php foreach ($columns as $columnIndex => $column): ?>
-                            <?php $visible = (bool) ($column['visible'] ?? true); ?>
-                            <td data-column="<?= esc((string) ($column['key'] ?? '')) ?>" <?= $visible ? '' : 'hidden' ?>>
+                            <?php
+                            $visible = (bool) ($column['visible'] ?? true);
+                            $exportable = (bool) ($column['exportable'] ?? true);
+                            ?>
+                            <td data-column="<?= esc((string) ($column['key'] ?? '')) ?>"
+                                data-exportable="<?= $exportable ? 'true' : 'false' ?>"
+                                <?= $visible ? '' : 'hidden' ?>>
                                 <span class="to-skeleton<?= $columnIndex === 1 ? ' to-skeleton--wide' : '' ?>"></span>
                             </td>
                         <?php endforeach ?>
@@ -124,7 +131,7 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
                     <?php $rowId = (string) ($row[$rowKey] ?? ''); ?>
                     <tr data-table-row data-row-id="<?= esc($rowId) ?>">
                         <?php if ($selectable): ?>
-                            <td class="to-table__selection">
+                            <td class="to-table__selection" data-exportable="false">
                                 <input type="checkbox"
                                        class="to-table__checkbox"
                                        name="selected_rows[]"
@@ -137,6 +144,7 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
                             <?php
                             $key = (string) ($column['key'] ?? '');
                             $visible = (bool) ($column['visible'] ?? true);
+                            $exportable = (bool) ($column['exportable'] ?? true);
                             $align = in_array(($column['align'] ?? 'start'), ['start', 'center', 'end'], true)
                                 ? $column['align']
                                 : 'start';
@@ -144,6 +152,7 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
                             ?>
                             <td class="to-table__cell--<?= esc($align) ?>"
                                 data-column="<?= esc($key) ?>"
+                                data-exportable="<?= $exportable ? 'true' : 'false' ?>"
                                 <?= $visible ? '' : 'hidden' ?>>
                                 <?php if (isset($column['render']) && is_callable($column['render'])): ?>
                                     <?= $column['render']($value, $row) ?>
