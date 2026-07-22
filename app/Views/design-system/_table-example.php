@@ -34,6 +34,13 @@ $columns = [
     ['key' => 'updated_at', 'label' => 'Actualización', 'sortable' => true],
     ['key' => 'actions', 'label' => 'Acciones', 'align' => 'end', 'render' => $actionsRenderer, 'hideable' => false, 'exportable' => false],
 ];
+
+$contextActions = [
+    ['key' => 'view', 'label' => 'Ver detalle', 'icon' => '↗', 'href' => '#customer-{id}'],
+    ['key' => 'edit', 'label' => 'Editar cliente', 'icon' => '✎'],
+    ['key' => 'duplicate', 'label' => 'Duplicar registro', 'icon' => '⧉'],
+    ['key' => 'archive', 'label' => 'Archivar', 'icon' => '□', 'variant' => 'danger'],
+];
 ?>
 <div class="to-table-section">
     <?= view('components/tables/toolbar', [
@@ -63,7 +70,10 @@ $columns = [
         'rowKey' => 'id',
         'columns' => $columns,
         'rows' => $customers,
+        'contextActions' => $contextActions,
     ]) ?>
+
+    <p class="to-table-help">Haz clic derecho sobre una fila o usa <kbd>Shift</kbd> + <kbd>F10</kbd> para abrir sus acciones.</p>
 
     <?= view('components/tables/pagination', [
         'currentPage' => 1,
