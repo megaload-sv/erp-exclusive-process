@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="<?= base_url('assets/css/form-system.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/form-feedback.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/table-system.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/table-states.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
     <?= $this->renderSection('styles') ?>
 </head>
