@@ -3,12 +3,16 @@
 /**
  * TraceOps table export menu.
  *
- * @var string $tableId
+ * @var string|null $tableId
  * @var string|null $fileName
  */
 
-$tableId = $tableId ?? 'enterprise-table';
-$fileName = $fileName ?? $tableId;
+$tableId = isset($tableId) && is_string($tableId) && $tableId !== ''
+    ? $tableId
+    : 'enterprise-table';
+$fileName = isset($fileName) && is_string($fileName) && trim($fileName) !== ''
+    ? trim($fileName)
+    : $tableId;
 ?>
 <details class="to-export-menu"
          data-export-menu
