@@ -3,34 +3,39 @@
 /**
  * TraceOps button component.
  *
- * @var string $label
+ * @var string|null $label
  * @var string|null $variant primary|secondary|ghost|danger
  * @var string|null $href
- * @var string|null $type
+ * @var string|null $type button|submit|reset
  * @var bool|null $disabled
  * @var string|null $loadingLabel
  * @var string|null $class
- * @var array<string, string>|null $attributes
+ * @var array<string, scalar|null>|null $attributes
  */
 
-$variant = $variant ?? 'primary';
-$href = $href ?? null;
-$type = $type ?? 'button';
-$disabled = $disabled ?? false;
-$loadingLabel = $loadingLabel ?? null;
-$extraClass = $class ?? '';
-$attributes = $attributes ?? [];
-$allowedVariants = ['primary', 'secondary', 'ghost', 'danger'];
-
-if (! in_array($variant, $allowedVariants, true)) {
-    $variant = 'primary';
-}
-
+$label = (string) ($label ?? 'Acción');
+$requestedVariant = (string) ($variant ?? 'primary');
+$variant = in_array($requestedVariant, ['primary', 'secondary', 'ghost', 'danger'], true)
+    ? $requestedVariant
+    : 'primary';
+$href = isset($href) && trim((string) $href) !== '' ? (string) $href : null;
+$requestedType = (string) ($type ?? 'button');
+$type = in_array($requestedType, ['button', 'submit', 'reset'], true) ? $requestedType : 'button';
+$disabled = (bool) ($disabled ?? false);
+$loadingLabel = isset($loadingLabel) && trim((string) $loadingLabel) !== '' ? (string) $loadingLabel : null;
+$extraClass = trim((string) ($class ?? ''));
+$attributes = is_array($attributes ?? null) ? $attributes : [];
 $classes = trim('to-btn to-btn--' . $variant . ' ' . $extraClass);
 $attributeHtml = '';
 
 foreach ($attributes as $attribute => $attributeValue) {
-    $attributeHtml .= ' ' . esc($attribute) . '="' . esc($attributeValue) . '"';
+    $attribute = (string) $attribute;
+
+    if (! preg_match('/^[a-zA-Z_:][a-zA-Z0-9:._-]*$/', $attribute) || ! is_scalar($attributeValue)) {
+        continue;
+    }
+
+    $attributeHtml .= ' ' . esc($attribute) . '="' . esc((string) $attributeValue) . '"';
 }
 
 if ($loadingLabel !== null) {
