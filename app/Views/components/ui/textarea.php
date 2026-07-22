@@ -3,29 +3,32 @@
 /**
  * TraceOps textarea field component.
  *
- * @var string $name
- * @var string $label
+ * @var string|null $name
+ * @var string|null $label
  * @var string|null $id
  * @var string|null $value
  * @var string|null $placeholder
  * @var string|null $hint
  * @var string|null $error
- * @var int|null $rows
- * @var bool|null $required
- * @var bool|null $disabled
+ * @var int|string|null $rows
+ * @var bool|int|string|null $required
+ * @var bool|int|string|null $disabled
  */
 
-$name = $name ?? '';
-$label = $label ?? '';
-$id = $id ?? $name;
-$value = $value ?? '';
-$placeholder = $placeholder ?? null;
-$hint = $hint ?? null;
-$error = $error ?? null;
+$name = trim((string) ($name ?? ''));
+$label = trim((string) ($label ?? ''));
+$id = trim((string) ($id ?? $name));
+$id = $id !== '' ? $id : $name;
+$value = (string) ($value ?? '');
+$placeholder = isset($placeholder) && $placeholder !== '' ? (string) $placeholder : null;
+$hint = isset($hint) && $hint !== '' ? (string) $hint : null;
+$error = isset($error) && $error !== '' ? (string) $error : null;
 $rows = max(2, (int) ($rows ?? 4));
-$required = $required ?? false;
-$disabled = $disabled ?? false;
-$descriptionId = $error !== null ? $id . '-error' : ($hint !== null ? $id . '-hint' : null);
+$required = filter_var($required ?? false, FILTER_VALIDATE_BOOL);
+$disabled = filter_var($disabled ?? false, FILTER_VALIDATE_BOOL);
+$descriptionId = $error !== null
+    ? $id . '-error'
+    : ($hint !== null ? $id . '-hint' : null);
 $fieldClass = 'to-field' . ($error !== null ? ' to-field--error' : '');
 ?>
 <div class="<?= esc($fieldClass) ?>">
