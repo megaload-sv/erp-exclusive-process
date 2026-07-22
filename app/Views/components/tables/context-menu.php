@@ -3,12 +3,15 @@
 /**
  * TraceOps row context menu.
  *
- * @var string $tableId
- * @var array<int, array<string, mixed>> $actions
+ * @var string|null $tableId
+ * @var array<int, array<string, mixed>>|null $actions
  */
 
-$tableId = $tableId ?? 'enterprise-table';
-$actions = $actions ?? [];
+$tableId = isset($tableId) && is_string($tableId) && $tableId !== ''
+    ? $tableId
+    : 'enterprise-table';
+$actions = isset($actions) && is_array($actions) ? $actions : [];
+$allowedVariants = ['default', 'danger'];
 ?>
 <div class="to-table-context-menu"
      data-table-context-menu
@@ -18,13 +21,22 @@ $actions = $actions ?? [];
      hidden>
     <?php foreach ($actions as $action): ?>
         <?php
-        $key = (string) ($action['key'] ?? 'action');
-        $label = (string) ($action['label'] ?? $key);
+        if (! is_array($action)) {
+            continue;
+        }
+
+        $key = trim((string) ($action['key'] ?? 'action'));
+        $key = $key !== '' ? $key : 'action';
+        $label = trim((string) ($action['label'] ?? $key));
+        $label = $label !== '' ? $label : $key;
         $icon = (string) ($action['icon'] ?? '•');
-        $variant = in_array(($action['variant'] ?? 'default'), ['default', 'danger'], true)
-            ? (string) $action['variant']
+        $requestedVariant = (string) ($action['variant'] ?? 'default');
+        $variant = in_array($requestedVariant, $allowedVariants, true)
+            ? $requestedVariant
             : 'default';
-        $href = isset($action['href']) ? (string) $action['href'] : null;
+        $href = isset($action['href']) && is_scalar($action['href'])
+            ? (string) $action['href']
+            : null;
         $disabled = (bool) ($action['disabled'] ?? false);
         ?>
         <button type="button"
