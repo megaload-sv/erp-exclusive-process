@@ -80,24 +80,29 @@ ob_start();
 <?php
 $operationsContent = ob_get_clean();
 ?>
-<form class="to-form" action="#" method="post" aria-label="Ejemplo de formulario empresarial">
-    <?= view('components/forms/section', [
-        'title' => 'Identificación del cliente',
-        'description' => 'Información legal y datos principales de contacto.',
-        'content' => $identityContent,
-        'legendId' => 'customer-identity-section',
-    ]) ?>
+<div class="to-form">
+    <form class="to-form" action="<?= current_url() ?>" method="get" aria-label="Ejemplo de formulario empresarial">
+        <?= view('components/forms/section', [
+            'title' => 'Identificación del cliente',
+            'description' => 'Información legal y datos principales de contacto.',
+            'content' => $identityContent,
+            'legendId' => 'customer-identity-section',
+        ]) ?>
 
-    <?= view('components/forms/section', [
-        'title' => 'Configuración operativa',
-        'description' => 'Parámetros utilizados por los procesos comerciales y logísticos.',
-        'content' => $operationsContent,
-        'legendId' => 'customer-operations-section',
-    ]) ?>
+        <?= view('components/forms/section', [
+            'title' => 'Configuración operativa',
+            'description' => 'Parámetros utilizados por los procesos comerciales y logísticos.',
+            'content' => $operationsContent,
+            'legendId' => 'customer-operations-section',
+        ]) ?>
 
-    <?= view('components/forms/actions', [
-        'submitLabel' => 'Guardar cliente',
-        'cancelLabel' => 'Cancelar',
-        'note' => 'Los campos marcados con * son obligatorios.',
-    ]) ?>
-</form>
+        <?= view('components/forms/actions', [
+            'submitLabel' => 'Guardar cliente',
+            'submitLoadingLabel' => 'Guardando cliente...',
+            'cancelLabel' => 'Cancelar',
+            'note' => 'Los campos marcados con * son obligatorios.',
+        ]) ?>
+    </form>
+
+    <?= view('design-system/_form-feedback-example') ?>
+</div>
