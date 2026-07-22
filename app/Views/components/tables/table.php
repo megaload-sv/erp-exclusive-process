@@ -15,6 +15,7 @@
  * @var string|null $errorDescription
  * @var string|null $emptyTitle
  * @var string|null $emptyDescription
+ * @var array<int, array<string, mixed>> $contextActions
  */
 
 $id = $id ?? 'enterprise-table';
@@ -29,6 +30,8 @@ $errorTitle = $errorTitle ?? null;
 $errorDescription = $errorDescription ?? 'Intenta nuevamente o actualiza la página.';
 $emptyTitle = $emptyTitle ?? 'No hay registros disponibles';
 $emptyDescription = $emptyDescription ?? 'Los registros aparecerán aquí cuando estén disponibles.';
+$contextActions = $contextActions ?? [];
+$hasContextMenu = $contextActions !== [] && ! $loading && $errorTitle === null && $rows !== [];
 $columnCount = count($columns) + ($selectable ? 1 : 0);
 ?>
 <div class="to-table-container<?= $loading ? ' is-loading' : '' ?>"
@@ -44,9 +47,7 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
             <tr>
                 <?php if ($selectable): ?>
                     <th class="to-table__selection" scope="col" data-exportable="false">
-                        <input type="checkbox"
-                               class="to-table__checkbox"
-                               data-table-select-all
+                        <input type="checkbox" class="to-table__checkbox" data-table-select-all
                                aria-label="Seleccionar todos los registros"
                                <?= $loading || $errorTitle !== null ? 'disabled' : '' ?>>
                     </th>
@@ -59,23 +60,17 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
                     $visible = (bool) ($column['visible'] ?? true);
                     $exportable = (bool) ($column['exportable'] ?? true);
                     $requestedAlign = (string) ($column['align'] ?? 'start');
-                    $align = in_array($requestedAlign, ['start', 'center', 'end'], true)
-                        ? $requestedAlign
-                        : 'start';
+                    $align = in_array($requestedAlign, ['start', 'center', 'end'], true) ? $requestedAlign : 'start';
                     $width = isset($column['width']) ? (string) $column['width'] : null;
                     ?>
-                    <th scope="col"
-                        class="to-table__cell--<?= esc($align) ?>"
+                    <th scope="col" class="to-table__cell--<?= esc($align) ?>"
                         data-column="<?= esc($key) ?>"
                         data-exportable="<?= $exportable ? 'true' : 'false' ?>"
                         <?= $visible ? '' : 'hidden' ?>
                         <?= $width !== null ? 'style="width:' . esc($width) . '"' : '' ?>>
                         <?php if ($sortable): ?>
-                            <button type="button"
-                                    class="to-table__sort"
-                                    data-table-sort="<?= esc($key) ?>"
-                                    aria-sort="none"
-                                    <?= $loading || $errorTitle !== null ? 'disabled' : '' ?>>
+                            <button type="button" class="to-table__sort" data-table-sort="<?= esc($key) ?>"
+                                    aria-sort="none" <?= $loading || $errorTitle !== null ? 'disabled' : '' ?>>
                                 <span><?= esc($label) ?></span>
                                 <span class="to-table__sort-icon" aria-hidden="true">↕</span>
                             </button>
@@ -94,50 +89,37 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
                             <td class="to-table__selection" data-exportable="false"><span class="to-skeleton to-skeleton--checkbox"></span></td>
                         <?php endif ?>
                         <?php foreach ($columns as $columnIndex => $column): ?>
-                            <?php
-                            $visible = (bool) ($column['visible'] ?? true);
-                            $exportable = (bool) ($column['exportable'] ?? true);
-                            ?>
+                            <?php $visible = (bool) ($column['visible'] ?? true); $exportable = (bool) ($column['exportable'] ?? true); ?>
                             <td data-column="<?= esc((string) ($column['key'] ?? '')) ?>"
-                                data-exportable="<?= $exportable ? 'true' : 'false' ?>"
-                                <?= $visible ? '' : 'hidden' ?>>
+                                data-exportable="<?= $exportable ? 'true' : 'false' ?>" <?= $visible ? '' : 'hidden' ?>>
                                 <span class="to-skeleton<?= $columnIndex === 1 ? ' to-skeleton--wide' : '' ?>"></span>
                             </td>
                         <?php endforeach ?>
                     </tr>
                 <?php endfor ?>
             <?php elseif ($errorTitle !== null): ?>
-                <tr>
-                    <td colspan="<?= esc((string) max($columnCount, 1)) ?>">
-                        <div class="to-table-state to-table-state--error" role="alert">
-                            <span class="to-table-state__icon" aria-hidden="true">!</span>
-                            <strong><?= esc($errorTitle) ?></strong>
-                            <span><?= esc($errorDescription) ?></span>
-                            <button type="button" class="to-btn to-btn--secondary" data-table-retry>Reintentar</button>
-                        </div>
-                    </td>
-                </tr>
+                <tr><td colspan="<?= esc((string) max($columnCount, 1)) ?>">
+                    <div class="to-table-state to-table-state--error" role="alert">
+                        <span class="to-table-state__icon" aria-hidden="true">!</span>
+                        <strong><?= esc($errorTitle) ?></strong><span><?= esc($errorDescription) ?></span>
+                        <button type="button" class="to-btn to-btn--secondary" data-table-retry>Reintentar</button>
+                    </div>
+                </td></tr>
             <?php elseif ($rows === []): ?>
-                <tr>
-                    <td colspan="<?= esc((string) max($columnCount, 1)) ?>">
-                        <div class="to-table-state">
-                            <span class="to-table-state__icon" aria-hidden="true">–</span>
-                            <strong><?= esc($emptyTitle) ?></strong>
-                            <span><?= esc($emptyDescription) ?></span>
-                        </div>
-                    </td>
-                </tr>
+                <tr><td colspan="<?= esc((string) max($columnCount, 1)) ?>">
+                    <div class="to-table-state"><span class="to-table-state__icon" aria-hidden="true">–</span>
+                        <strong><?= esc($emptyTitle) ?></strong><span><?= esc($emptyDescription) ?></span>
+                    </div>
+                </td></tr>
             <?php else: ?>
                 <?php foreach ($rows as $row): ?>
                     <?php $rowId = (string) ($row[$rowKey] ?? ''); ?>
-                    <tr data-table-row data-row-id="<?= esc($rowId) ?>">
+                    <tr data-table-row data-row-id="<?= esc($rowId) ?>"
+                        <?= $hasContextMenu ? 'tabindex="0" aria-haspopup="menu"' : '' ?>>
                         <?php if ($selectable): ?>
                             <td class="to-table__selection" data-exportable="false">
-                                <input type="checkbox"
-                                       class="to-table__checkbox"
-                                       name="selected_rows[]"
-                                       value="<?= esc($rowId) ?>"
-                                       data-table-select-row
+                                <input type="checkbox" class="to-table__checkbox" name="selected_rows[]"
+                                       value="<?= esc($rowId) ?>" data-table-select-row
                                        aria-label="Seleccionar registro <?= esc($rowId) ?>">
                             </td>
                         <?php endif ?>
@@ -147,15 +129,11 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
                             $visible = (bool) ($column['visible'] ?? true);
                             $exportable = (bool) ($column['exportable'] ?? true);
                             $requestedAlign = (string) ($column['align'] ?? 'start');
-                            $align = in_array($requestedAlign, ['start', 'center', 'end'], true)
-                                ? $requestedAlign
-                                : 'start';
+                            $align = in_array($requestedAlign, ['start', 'center', 'end'], true) ? $requestedAlign : 'start';
                             $value = $row[$key] ?? '';
                             ?>
-                            <td class="to-table__cell--<?= esc($align) ?>"
-                                data-column="<?= esc($key) ?>"
-                                data-exportable="<?= $exportable ? 'true' : 'false' ?>"
-                                <?= $visible ? '' : 'hidden' ?>>
+                            <td class="to-table__cell--<?= esc($align) ?>" data-column="<?= esc($key) ?>"
+                                data-exportable="<?= $exportable ? 'true' : 'false' ?>" <?= $visible ? '' : 'hidden' ?>>
                                 <?php if (isset($column['render']) && is_callable($column['render'])): ?>
                                     <?= $column['render']($value, $row) ?>
                                 <?php else: ?>
@@ -169,4 +147,8 @@ $columnCount = count($columns) + ($selectable ? 1 : 0);
             </tbody>
         </table>
     </div>
+
+    <?php if ($hasContextMenu): ?>
+        <?= view('components/tables/context-menu', ['tableId' => $id, 'actions' => $contextActions]) ?>
+    <?php endif ?>
 </div>
