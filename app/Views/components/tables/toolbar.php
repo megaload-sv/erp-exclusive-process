@@ -10,6 +10,8 @@
  * @var string|null $primaryActionHref
  * @var string|null $bulkActionLabel
  * @var int|null $resultCount
+ * @var string|null $tableId
+ * @var array<int, array<string, mixed>> $columns
  */
 
 $searchName = $searchName ?? 'q';
@@ -19,6 +21,8 @@ $primaryActionLabel = $primaryActionLabel ?? null;
 $primaryActionHref = $primaryActionHref ?? null;
 $bulkActionLabel = $bulkActionLabel ?? 'Acciones masivas';
 $resultCount = $resultCount ?? null;
+$tableId = $tableId ?? null;
+$columns = $columns ?? [];
 $searchId = 'table-search-' . preg_replace('/[^a-zA-Z0-9_-]/', '-', $searchName);
 ?>
 <div class="to-table-toolbar" data-table-toolbar>
@@ -47,6 +51,13 @@ $searchId = 'table-search-' . preg_replace('/[^a-zA-Z0-9_-]/', '-', $searchName)
     </div>
 
     <div class="to-table-toolbar__actions">
+        <?php if ($tableId !== null && $columns !== []): ?>
+            <?= view('components/tables/column-manager', [
+                'tableId' => $tableId,
+                'columns' => $columns,
+            ]) ?>
+        <?php endif ?>
+
         <button type="button" class="to-btn to-btn--secondary" data-table-bulk-action disabled>
             <span class="to-btn__label"><?= esc($bulkActionLabel) ?></span>
             <span class="to-table-toolbar__count" data-table-selection-count>0</span>
