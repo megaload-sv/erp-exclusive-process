@@ -32,6 +32,7 @@ $actionsRenderer = static function ($value, array $row): string {
         'primaryActionLabel' => 'Nuevo cliente',
         'primaryActionHref' => '#new-customer',
         'bulkActionLabel' => 'Acciones masivas',
+        'resultCount' => count($customers),
     ]) ?>
 
     <?= view('components/tables/table', [
