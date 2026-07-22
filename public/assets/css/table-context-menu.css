@@ -1,0 +1,61 @@
+.to-table-context-menu {
+    position: fixed;
+    z-index: 1000;
+    display: grid;
+    min-width: 13rem;
+    padding: var(--to-ref-space-2);
+    border: 1px solid var(--to-sys-color-border);
+    border-radius: var(--to-sys-radius-container);
+    background: var(--to-sys-color-surface);
+    box-shadow: var(--to-sys-shadow-container);
+}
+
+.to-table-context-menu[hidden] {
+    display: none;
+}
+
+.to-table-context-menu__item {
+    display: flex;
+    align-items: center;
+    gap: var(--to-ref-space-3);
+    width: 100%;
+    padding: var(--to-ref-space-2) var(--to-ref-space-3);
+    border: 0;
+    border-radius: var(--to-ref-radius-sm);
+    background: transparent;
+    color: var(--to-sys-color-text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.to-table-context-menu__item:hover,
+.to-table-context-menu__item:focus-visible {
+    background: var(--to-sys-color-surface-muted);
+    outline: none;
+}
+
+.to-table-context-menu__item.is-danger {
+    color: var(--to-sys-color-danger);
+}
+
+.to-table-context-menu__item:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.to-table-context-menu__icon {
+    display: inline-grid;
+    place-items: center;
+    width: 1.25rem;
+    color: currentColor;
+}
+
+.to-table [data-table-row][tabindex="0"]:focus-visible {
+    outline: 3px solid var(--to-sys-color-focus-ring);
+    outline-offset: -3px;
+}
+
+.to-table [data-table-row].has-context-menu {
+    background: color-mix(in srgb, var(--to-sys-color-primary) 8%, var(--to-sys-color-surface));
+}
