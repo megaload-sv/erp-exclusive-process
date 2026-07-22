@@ -12,7 +12,7 @@
             <h2>Catálogo de fundamentos y componentes</h2>
             <p>Referencia viva para construir interfaces consistentes, accesibles y mantenibles.</p>
         </div>
-        <?= view('components/ui/badge', ['label' => 'PR-004', 'variant' => 'info']) ?>
+        <?= view('components/ui/badge', ['label' => 'PR-005', 'variant' => 'info']) ?>
     </div>
 </section>
 
@@ -42,9 +42,9 @@
             <ul class="check-list">
                 <li>Foundations y temas</li>
                 <li>Button, Badge y Card</li>
-                <li>Input, Textarea y Select accesibles</li>
-                <li>Checkbox, Radio Group y Switch</li>
-                <li>Composición responsiva de formularios</li>
+                <li>Sistema empresarial de formularios</li>
+                <li>Tabla semántica y responsiva</li>
+                <li>Selección, ordenamiento y paginación</li>
             </ul>
         </div>
     </article>
@@ -121,54 +121,30 @@
         </div>
         <?= view('components/ui/badge', ['label' => 'Ready', 'variant' => 'success']) ?>
     </div>
-
     <div class="to-catalog-grid" aria-label="Checkbox, Radio Group y Switch">
-        <article class="to-card">
-            <header class="to-card__header"><h3>Checkbox</h3></header>
-            <div class="to-card__body">
-                <div class="to-form">
-                    <?= view('components/ui/checkbox', ['name' => 'accept_terms', 'label' => 'Confirmar información', 'description' => 'Declaro que los datos fueron verificados.', 'checked' => true, 'required' => true]) ?>
-                    <?= view('components/ui/checkbox', ['name' => 'locked_permission', 'label' => 'Permiso administrado', 'description' => 'Solo puede modificarse desde seguridad.', 'disabled' => true]) ?>
-                </div>
-            </div>
-        </article>
-
-        <article class="to-card">
-            <header class="to-card__header"><h3>Radio Group</h3></header>
-            <div class="to-card__body">
-                <?= view('components/ui/radio-group', [
-                    'name' => 'approval_mode',
-                    'label' => 'Modalidad de aprobación',
-                    'options' => ['automatic' => 'Automática', 'manual' => 'Manual', 'supervisor' => 'Requiere supervisor'],
-                    'selected' => 'manual',
-                    'hint' => 'Selecciona una sola política para este proceso.',
-                    'required' => true,
-                ]) ?>
-            </div>
-        </article>
-
-        <article class="to-card">
-            <header class="to-card__header"><h3>Switch</h3></header>
-            <div class="to-card__body">
-                <div class="to-form">
-                    <?= view('components/ui/switch', ['name' => 'notifications_enabled', 'label' => 'Notificaciones operativas', 'description' => 'Envía alertas cuando el proceso cambia de estado.', 'checked' => true]) ?>
-                    <?= view('components/ui/switch', ['name' => 'audit_locked', 'label' => 'Auditoría obligatoria', 'description' => 'Configuración protegida por política corporativa.', 'checked' => true, 'disabled' => true]) ?>
-                </div>
-            </div>
-        </article>
+        <article class="to-card"><header class="to-card__header"><h3>Checkbox</h3></header><div class="to-card__body"><div class="to-form"><?= view('components/ui/checkbox', ['name' => 'accept_terms', 'label' => 'Confirmar información', 'description' => 'Declaro que los datos fueron verificados.', 'checked' => true, 'required' => true]) ?><?= view('components/ui/checkbox', ['name' => 'locked_permission', 'label' => 'Permiso administrado', 'description' => 'Solo puede modificarse desde seguridad.', 'disabled' => true]) ?></div></div></article>
+        <article class="to-card"><header class="to-card__header"><h3>Radio Group</h3></header><div class="to-card__body"><?= view('components/ui/radio-group', ['name' => 'approval_mode', 'label' => 'Modalidad de aprobación', 'options' => ['automatic' => 'Automática', 'manual' => 'Manual', 'supervisor' => 'Requiere supervisor'], 'selected' => 'manual', 'hint' => 'Selecciona una sola política para este proceso.', 'required' => true]) ?></div></article>
+        <article class="to-card"><header class="to-card__header"><h3>Switch</h3></header><div class="to-card__body"><div class="to-form"><?= view('components/ui/switch', ['name' => 'notifications_enabled', 'label' => 'Notificaciones operativas', 'description' => 'Envía alertas cuando el proceso cambia de estado.', 'checked' => true]) ?><?= view('components/ui/switch', ['name' => 'audit_locked', 'label' => 'Auditoría obligatoria', 'description' => 'Configuración protegida por política corporativa.', 'checked' => true, 'disabled' => true]) ?></div></div></article>
     </div>
 </section>
 
 <section class="content-panel">
     <div class="section-heading">
-        <div>
-            <p class="eyebrow">Enterprise Forms</p>
-            <h2>Composición completa</h2>
-            <p>Secciones semánticas, distribución responsiva y acciones consistentes para formularios empresariales.</p>
-        </div>
+        <div><p class="eyebrow">Enterprise Forms</p><h2>Composición completa</h2><p>Secciones semánticas, distribución responsiva y acciones consistentes para formularios empresariales.</p></div>
         <?= view('components/ui/badge', ['label' => 'Ready', 'variant' => 'success']) ?>
     </div>
-
     <?= view('design-system/_form-example') ?>
+</section>
+
+<section class="content-panel">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Enterprise Tables</p>
+            <h2>Data table foundation</h2>
+            <p>Listado semántico y responsivo con selección, toolbar, encabezados ordenables, estados y paginación.</p>
+        </div>
+        <?= view('components/ui/badge', ['label' => 'Foundation', 'variant' => 'info']) ?>
+    </div>
+    <?= view('design-system/_table-example') ?>
 </section>
 <?= $this->endSection() ?>
