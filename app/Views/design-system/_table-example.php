@@ -32,7 +32,7 @@ $columns = [
     ['key' => 'status', 'label' => 'Estado', 'render' => $statusRenderer],
     ['key' => 'balance', 'label' => 'Balance', 'align' => 'end', 'sortable' => true],
     ['key' => 'updated_at', 'label' => 'Actualización', 'sortable' => true],
-    ['key' => 'actions', 'label' => 'Acciones', 'align' => 'end', 'render' => $actionsRenderer, 'hideable' => false],
+    ['key' => 'actions', 'label' => 'Acciones', 'align' => 'end', 'render' => $actionsRenderer, 'hideable' => false, 'exportable' => false],
 ];
 ?>
 <div class="to-table-section">
@@ -46,6 +46,7 @@ $columns = [
         'tableId' => 'customers-table',
         'columns' => $columns,
         'defaultDensity' => 'comfortable',
+        'exportFileName' => 'clientes-empresariales',
     ]) ?>
 
     <?= view('components/tables/filter-chips', [
