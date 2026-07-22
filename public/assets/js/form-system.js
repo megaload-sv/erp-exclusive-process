@@ -1,13 +1,36 @@
 (() => {
     'use strict';
 
+    const resetFormState = (form) => {
+        delete form.dataset.toSubmitting;
+        form.removeAttribute('aria-busy');
+
+        form.querySelectorAll('[data-form-submit="true"]').forEach((button) => {
+            if (!(button instanceof HTMLButtonElement)) {
+                return;
+            }
+
+            const label = button.querySelector('.to-btn__label');
+            const originalLabel = button.dataset.originalLabel;
+
+            button.disabled = false;
+            button.classList.remove('to-btn--loading');
+
+            if (label && originalLabel) {
+                label.textContent = originalLabel;
+            }
+        });
+    };
+
     document.addEventListener('submit', (event) => {
         const form = event.target;
 
-        if (!(form instanceof HTMLFormElement) || form.dataset.toSubmitting === 'true') {
-            if (form instanceof HTMLFormElement) {
-                event.preventDefault();
-            }
+        if (!(form instanceof HTMLFormElement) || !form.hasAttribute('data-protect-submit')) {
+            return;
+        }
+
+        if (form.dataset.toSubmitting === 'true') {
+            event.preventDefault();
             return;
         }
 
@@ -26,11 +49,27 @@
             const label = button.querySelector('.to-btn__label');
             const loadingLabel = button.dataset.loadingLabel;
 
+            if (label && !button.dataset.originalLabel) {
+                button.dataset.originalLabel = label.textContent ?? '';
+            }
+
             button.disabled = true;
             button.classList.add('to-btn--loading');
 
             if (label && loadingLabel) {
                 label.textContent = loadingLabel;
+            }
+        });
+    });
+
+    window.addEventListener('pageshow', (event) => {
+        if (!event.persisted) {
+            return;
+        }
+
+        document.querySelectorAll('form[data-protect-submit]').forEach((form) => {
+            if (form instanceof HTMLFormElement) {
+                resetFormState(form);
             }
         });
     });
@@ -44,7 +83,8 @@
             return;
         }
 
-        const field = document.querySelector(link.getAttribute('href'));
+        const selector = link.getAttribute('href');
+        const field = selector ? document.querySelector(selector) : null;
 
         if (field instanceof HTMLElement) {
             event.preventDefault();
