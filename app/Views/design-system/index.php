@@ -1,0 +1,95 @@
+<?= $this->extend('layouts/dashboard') ?>
+
+<?= $this->section('content') ?>
+<section class="content-panel">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">TraceOps Design Language</p>
+            <h2>Catálogo de fundamentos y componentes</h2>
+            <p>Referencia viva para construir interfaces consistentes, accesibles y mantenibles.</p>
+        </div>
+        <?= view('components/ui/badge', [
+            'label' => 'PR-003',
+            'variant' => 'info',
+        ]) ?>
+    </div>
+</section>
+
+<section class="to-catalog-grid" aria-label="Fundamentos del sistema de diseño">
+    <article class="to-card">
+        <header class="to-card__header">
+            <p class="eyebrow">Foundations</p>
+            <h2>Tokens semánticos</h2>
+        </header>
+        <div class="to-card__body">
+            <div class="to-token-list">
+                <div><span class="to-token-swatch to-token-swatch--primary"></span><strong>Primary</strong><code>--to-sys-color-primary</code></div>
+                <div><span class="to-token-swatch to-token-swatch--success"></span><strong>Success</strong><code>--to-sys-color-success</code></div>
+                <div><span class="to-token-swatch to-token-swatch--warning"></span><strong>Warning</strong><code>--to-sys-color-warning</code></div>
+                <div><span class="to-token-swatch to-token-swatch--danger"></span><strong>Danger</strong><code>--to-sys-color-danger</code></div>
+                <div><span class="to-token-swatch to-token-swatch--surface"></span><strong>Surface</strong><code>--to-sys-color-surface</code></div>
+            </div>
+        </div>
+    </article>
+
+    <article class="to-card">
+        <header class="to-card__header">
+            <p class="eyebrow">Status</p>
+            <h2>Entrega actual</h2>
+        </header>
+        <div class="to-card__body">
+            <ul class="check-list">
+                <li>Tokens de referencia y semánticos</li>
+                <li>Tema claro predeterminado</li>
+                <li>Preparación para tema oscuro</li>
+                <li>Accesibilidad y movimiento reducido</li>
+                <li>Button y Badge reutilizables</li>
+            </ul>
+        </div>
+    </article>
+</section>
+
+<section class="content-panel">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Components</p>
+            <h2>Button</h2>
+            <p>Acciones principales, secundarias, discretas y destructivas.</p>
+        </div>
+        <?= view('components/ui/badge', [
+            'label' => 'Ready',
+            'variant' => 'success',
+        ]) ?>
+    </div>
+
+    <div class="to-component-preview" aria-label="Variantes del componente Button">
+        <?= view('components/ui/button', ['label' => 'Guardar cambios', 'variant' => 'primary']) ?>
+        <?= view('components/ui/button', ['label' => 'Cancelar', 'variant' => 'secondary']) ?>
+        <?= view('components/ui/button', ['label' => 'Ver detalles', 'variant' => 'ghost']) ?>
+        <?= view('components/ui/button', ['label' => 'Eliminar', 'variant' => 'danger']) ?>
+        <?= view('components/ui/button', ['label' => 'No disponible', 'variant' => 'primary', 'disabled' => true]) ?>
+    </div>
+</section>
+
+<section class="content-panel">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Components</p>
+            <h2>Badge</h2>
+            <p>Estados compactos para procesos, registros y condiciones operativas.</p>
+        </div>
+        <?= view('components/ui/badge', [
+            'label' => 'Ready',
+            'variant' => 'success',
+        ]) ?>
+    </div>
+
+    <div class="to-component-preview" aria-label="Variantes del componente Badge">
+        <?= view('components/ui/badge', ['label' => 'Neutral', 'variant' => 'neutral']) ?>
+        <?= view('components/ui/badge', ['label' => 'Activo', 'variant' => 'success']) ?>
+        <?= view('components/ui/badge', ['label' => 'Pendiente', 'variant' => 'warning']) ?>
+        <?= view('components/ui/badge', ['label' => 'Error', 'variant' => 'danger']) ?>
+        <?= view('components/ui/badge', ['label' => 'Información', 'variant' => 'info']) ?>
+    </div>
+</section>
+<?= $this->endSection() ?>
