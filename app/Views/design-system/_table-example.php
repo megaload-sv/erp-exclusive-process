@@ -24,6 +24,16 @@ $actionsRenderer = static function ($value, array $row): string {
         'href' => '#customer-' . $row['id'],
     ]);
 };
+
+$columns = [
+    ['key' => 'id', 'label' => 'Código', 'sortable' => true],
+    ['key' => 'customer', 'label' => 'Cliente', 'sortable' => true],
+    ['key' => 'country', 'label' => 'País', 'sortable' => true],
+    ['key' => 'status', 'label' => 'Estado', 'render' => $statusRenderer],
+    ['key' => 'balance', 'label' => 'Balance', 'align' => 'end', 'sortable' => true],
+    ['key' => 'updated_at', 'label' => 'Actualización', 'sortable' => true],
+    ['key' => 'actions', 'label' => 'Acciones', 'align' => 'end', 'render' => $actionsRenderer],
+];
 ?>
 <div class="to-table-section">
     <?= view('components/tables/toolbar', [
@@ -32,7 +42,13 @@ $actionsRenderer = static function ($value, array $row): string {
         'primaryActionLabel' => 'Nuevo cliente',
         'primaryActionHref' => '#new-customer',
         'bulkActionLabel' => 'Acciones masivas',
-        'resultCount' => count($customers),
+    ]) ?>
+
+    <?= view('components/tables/filter-chips', [
+        'filters' => [
+            ['key' => 'status', 'label' => 'Estado', 'value' => 'Activo'],
+            ['key' => 'country', 'label' => 'País', 'value' => 'El Salvador'],
+        ],
     ]) ?>
 
     <?= view('components/tables/table', [
@@ -40,15 +56,7 @@ $actionsRenderer = static function ($value, array $row): string {
         'caption' => 'Listado de clientes empresariales',
         'selectable' => true,
         'rowKey' => 'id',
-        'columns' => [
-            ['key' => 'id', 'label' => 'Código', 'sortable' => true],
-            ['key' => 'customer', 'label' => 'Cliente', 'sortable' => true],
-            ['key' => 'country', 'label' => 'País', 'sortable' => true],
-            ['key' => 'status', 'label' => 'Estado', 'render' => $statusRenderer],
-            ['key' => 'balance', 'label' => 'Balance', 'align' => 'end', 'sortable' => true],
-            ['key' => 'updated_at', 'label' => 'Actualización', 'sortable' => true],
-            ['key' => 'actions', 'label' => 'Acciones', 'align' => 'end', 'render' => $actionsRenderer],
-        ],
+        'columns' => $columns,
         'rows' => $customers,
     ]) ?>
 
@@ -59,4 +67,34 @@ $actionsRenderer = static function ($value, array $row): string {
         'to' => 4,
         'total' => 12,
     ]) ?>
+</div>
+
+<div class="to-catalog-grid" style="margin-top: var(--to-ref-space-6)">
+    <article class="to-card">
+        <header class="to-card__header"><h3>Estado de carga</h3></header>
+        <div class="to-card__body">
+            <?= view('components/tables/table', [
+                'id' => 'customers-loading-table',
+                'caption' => 'Tabla cargando datos',
+                'columns' => array_slice($columns, 0, 3),
+                'rows' => [],
+                'loading' => true,
+                'skeletonRows' => 4,
+            ]) ?>
+        </div>
+    </article>
+
+    <article class="to-card">
+        <header class="to-card__header"><h3>Estado de error</h3></header>
+        <div class="to-card__body">
+            <?= view('components/tables/table', [
+                'id' => 'customers-error-table',
+                'caption' => 'Tabla con error de carga',
+                'columns' => array_slice($columns, 0, 3),
+                'rows' => [],
+                'errorTitle' => 'No fue posible cargar los clientes',
+                'errorDescription' => 'Verifica tu conexión e intenta nuevamente.',
+            ]) ?>
+        </div>
+    </article>
 </div>
