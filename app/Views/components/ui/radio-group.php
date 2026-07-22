@@ -3,25 +3,37 @@
 /**
  * TraceOps radio group component.
  *
- * @var string $name
- * @var string $label
- * @var array<string,string> $options
- * @var string|null $selected
+ * @var string|null $name
+ * @var string|null $label
+ * @var array<string,string>|null $options
+ * @var string|int|float|null $selected
  * @var string|null $hint
  * @var string|null $error
- * @var bool|null $required
- * @var bool|null $disabled
+ * @var bool|int|string|null $required
+ * @var bool|int|string|null $disabled
  */
 
-$name = $name ?? '';
-$label = $label ?? '';
-$options = $options ?? [];
-$selected = $selected ?? null;
-$hint = $hint ?? null;
-$error = $error ?? null;
-$required = $required ?? false;
-$disabled = $disabled ?? false;
-$descriptionId = $error !== null ? $name . '-error' : ($hint !== null ? $name . '-hint' : null);
+$name = trim((string) ($name ?? ''));
+$label = trim((string) ($label ?? ''));
+$rawOptions = is_array($options ?? null) ? $options : [];
+$options = [];
+
+foreach ($rawOptions as $value => $optionLabel) {
+    if (is_array($optionLabel) || is_object($optionLabel)) {
+        continue;
+    }
+
+    $options[(string) $value] = (string) $optionLabel;
+}
+
+$selected = isset($selected) ? (string) $selected : null;
+$hint = isset($hint) && $hint !== '' ? (string) $hint : null;
+$error = isset($error) && $error !== '' ? (string) $error : null;
+$required = filter_var($required ?? false, FILTER_VALIDATE_BOOL);
+$disabled = filter_var($disabled ?? false, FILTER_VALIDATE_BOOL);
+$descriptionId = $error !== null
+    ? $name . '-error'
+    : ($hint !== null ? $name . '-hint' : null);
 ?>
 <fieldset class="to-radio-group <?= $error !== null ? 'to-radio-group--error' : '' ?>" <?= $descriptionId !== null ? 'aria-describedby="' . esc($descriptionId) . '"' : '' ?>>
     <legend class="to-field__label">
@@ -31,15 +43,18 @@ $descriptionId = $error !== null ? $name . '-error' : ($hint !== null ? $name . 
 
     <div class="to-radio-group__options">
         <?php foreach ($options as $value => $optionLabel): ?>
-            <?php $id = $name . '-' . preg_replace('/[^a-z0-9_-]+/i', '-', (string) $value); ?>
+            <?php
+            $suffix = preg_replace('/[^a-z0-9_-]+/i', '-', $value) ?: 'option';
+            $id = ($name !== '' ? $name : 'radio') . '-' . trim($suffix, '-');
+            ?>
             <label class="to-choice <?= $disabled ? 'to-choice--disabled' : '' ?>" for="<?= esc($id) ?>">
                 <input
                     class="to-choice__control"
                     id="<?= esc($id) ?>"
                     name="<?= esc($name) ?>"
                     type="radio"
-                    value="<?= esc((string) $value) ?>"
-                    <?= (string) $selected === (string) $value ? 'checked' : '' ?>
+                    value="<?= esc($value) ?>"
+                    <?= $selected !== null && $selected === $value ? 'checked' : '' ?>
                     <?= $required ? 'required' : '' ?>
                     <?= $disabled ? 'disabled' : '' ?>
                 >
