@@ -2,6 +2,7 @@
     'use strict';
 
     const STORAGE_KEY = 'traceops.table.preferences';
+    const DENSITIES = ['compact', 'comfortable', 'spacious'];
 
     const normalize = (value) => value
         .toLocaleLowerCase('es')
@@ -33,9 +34,11 @@
             this.section = container.closest('.to-table-section');
             this.toolbar = this.section?.querySelector('[data-table-toolbar]');
             this.manager = this.section?.querySelector(`[data-column-manager][data-table-target="${CSS.escape(this.tableId)}"]`);
+            this.densitySelector = this.section?.querySelector(`[data-density-selector][data-table-target="${CSS.escape(this.tableId)}"]`);
 
             this.bindEvents();
             this.loadColumnPreferences();
+            this.loadDensityPreference();
             this.updateSelectionState();
             this.updateResultState();
         }
@@ -82,6 +85,11 @@
                     this.setColumnVisibility(target.value, target.checked);
                     this.saveColumnPreferences();
                 }
+
+                if (target.matches('[data-density-option]')) {
+                    this.setDensity(target.value);
+                    this.saveDensityPreference(target.value);
+                }
             });
 
             this.section?.addEventListener('click', (event) => {
@@ -90,6 +98,7 @@
                 const clearButton = target?.closest('[data-table-clear-search]');
                 const showAllButton = target?.closest('[data-column-show-all]');
                 const resetButton = target?.closest('[data-column-reset]');
+                const densityResetButton = target?.closest('[data-density-reset]');
 
                 if (sortButton instanceof HTMLButtonElement) {
                     this.sort(sortButton);
@@ -116,6 +125,10 @@
 
                 if (resetButton instanceof HTMLButtonElement) {
                     this.resetColumnPreferences();
+                }
+
+                if (densityResetButton instanceof HTMLButtonElement) {
+                    this.resetDensityPreference();
                 }
             });
         }
@@ -274,6 +287,55 @@
                     this.setColumnVisibility(checkbox.value, checkbox.checked);
                 }
             });
+        }
+
+        setDensity(value) {
+            const density = DENSITIES.includes(value) ? value : 'comfortable';
+            this.container.dataset.tableDensity = density;
+
+            this.densitySelector?.querySelectorAll('[data-density-option]').forEach((option) => {
+                if (option instanceof HTMLInputElement) {
+                    option.checked = option.value === density;
+                }
+            });
+
+            const selected = this.densitySelector?.querySelector(`[data-density-option][value="${CSS.escape(density)}"]`);
+            const label = selected?.closest('label')?.querySelector('strong')?.textContent?.trim();
+            const currentLabel = this.densitySelector?.querySelector('[data-density-label]');
+            if (currentLabel && label) {
+                currentLabel.textContent = label;
+            }
+        }
+
+        loadDensityPreference() {
+            const savedDensity = readPreferences().tables?.[this.tableId]?.density;
+            const defaultOption = this.densitySelector?.querySelector('[data-density-option]:checked');
+            const density = DENSITIES.includes(savedDensity) ? savedDensity : defaultOption?.value || 'comfortable';
+            this.setDensity(density);
+        }
+
+        saveDensityPreference(value) {
+            if (!DENSITIES.includes(value)) {
+                return;
+            }
+
+            const preferences = readPreferences();
+            preferences.tables ||= {};
+            preferences.tables[this.tableId] ||= {};
+            preferences.tables[this.tableId].density = value;
+            writePreferences(preferences);
+        }
+
+        resetDensityPreference() {
+            const preferences = readPreferences();
+            if (preferences.tables?.[this.tableId]) {
+                delete preferences.tables[this.tableId].density;
+                writePreferences(preferences);
+            }
+
+            const defaultOption = [...(this.densitySelector?.querySelectorAll('[data-density-option]') || [])]
+                .find((option) => option instanceof HTMLInputElement && option.defaultChecked);
+            this.setDensity(defaultOption?.value || 'comfortable');
         }
     }
 
