@@ -3,13 +3,33 @@
 /**
  * TraceOps column manager component.
  *
- * @var string $tableId
- * @var array<int, array<string, mixed>> $columns
+ * @var string|null $tableId
+ * @var array<int, array<string, mixed>>|null $columns
  */
 
-$tableId = $tableId ?? 'enterprise-table';
-$columns = $columns ?? [];
-$manageableColumns = array_values(array_filter($columns, static fn (array $column): bool => ($column['hideable'] ?? true) === true));
+$tableId = isset($tableId) && is_string($tableId) && $tableId !== ''
+    ? $tableId
+    : 'enterprise-table';
+$columns = isset($columns) && is_array($columns) ? $columns : [];
+$manageableColumns = [];
+
+foreach ($columns as $column) {
+    if (! is_array($column) || ($column['hideable'] ?? true) !== true) {
+        continue;
+    }
+
+    $key = trim((string) ($column['key'] ?? ''));
+    if ($key === '') {
+        continue;
+    }
+
+    $label = trim((string) ($column['label'] ?? $key));
+    $manageableColumns[] = [
+        'key' => $key,
+        'label' => $label !== '' ? $label : $key,
+        'visible' => (bool) ($column['visible'] ?? true),
+    ];
+}
 ?>
 <details class="to-column-manager" data-column-manager data-table-target="<?= esc($tableId) ?>">
     <summary class="to-btn to-btn--secondary" aria-label="Personalizar columnas de la tabla">
@@ -34,17 +54,12 @@ $manageableColumns = array_values(array_filter($columns, static fn (array $colum
 
         <div class="to-column-manager__options" data-column-options>
             <?php foreach ($manageableColumns as $column): ?>
-                <?php
-                $key = (string) ($column['key'] ?? '');
-                $label = (string) ($column['label'] ?? $key);
-                $visible = (bool) ($column['visible'] ?? true);
-                ?>
-                <label class="to-column-manager__option" data-column-option data-column-label="<?= esc($label) ?>">
+                <label class="to-column-manager__option" data-column-option data-column-label="<?= esc($column['label']) ?>">
                     <input type="checkbox"
-                           value="<?= esc($key) ?>"
+                           value="<?= esc($column['key']) ?>"
                            data-column-toggle
-                           <?= $visible ? 'checked' : '' ?>>
-                    <span><?= esc($label) ?></span>
+                           <?= $column['visible'] ? 'checked' : '' ?>>
+                    <span><?= esc($column['label']) ?></span>
                 </label>
             <?php endforeach ?>
         </div>
