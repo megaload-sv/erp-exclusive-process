@@ -1,84 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="utf-8">
-    <title><?= lang('Errors.pageNotFound') ?></title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 | TraceOps ERP</title>
     <style>
-        div.logo {
-            height: 200px;
-            width: 155px;
-            display: inline-block;
-            opacity: 0.08;
-            position: absolute;
-            top: 2rem;
-            left: 50%;
-            margin-left: -73px;
-        }
-        body {
-            height: 100%;
-            background: #fafafa;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            color: #777;
-            font-weight: 300;
-        }
-        h1 {
-            font-weight: lighter;
-            letter-spacing: normal;
-            font-size: 3rem;
-            margin-top: 0;
-            margin-bottom: 0;
-            color: #222;
-        }
-        .wrap {
-            max-width: 1024px;
-            margin: 5rem auto;
-            padding: 2rem;
-            background: #fff;
-            text-align: center;
-            border: 1px solid #efefef;
-            border-radius: 0.5rem;
-            position: relative;
-        }
-        pre {
-            white-space: normal;
-            margin-top: 1.5rem;
-        }
-        code {
-            background: #fafafa;
-            border: 1px solid #efefef;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            display: block;
-        }
-        p {
-            margin-top: 1.5rem;
-        }
-        .footer {
-            margin-top: 2rem;
-            border-top: 1px solid #efefef;
-            padding: 1em 2em 0 2em;
-            font-size: 85%;
-            color: #999;
-        }
-        a:active,
-        a:link,
-        a:visited {
-            color: #dd4814;
-        }
+        body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f4f7fb;color:#172033}.error-shell{min-height:100vh;display:grid;place-items:center;padding:24px}.error-card{width:min(680px,100%);background:#fff;border:1px solid #e6ebf2;border-radius:24px;padding:48px;box-shadow:0 24px 70px rgba(22,32,51,.10);text-align:center}.brand{font-weight:800;letter-spacing:.08em;color:#1b4d89}.code{font-size:clamp(72px,16vw,150px);line-height:1;font-weight:900;color:#dce8f6;margin:24px 0 8px}.error-card h1{font-size:30px;margin:0 0 12px}.error-card p{color:#617087;line-height:1.7;margin:0 auto 28px;max-width:520px}.actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.button{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;border-radius:12px;text-decoration:none;font-weight:700}.button-primary{background:#1b4d89;color:#fff}.button-secondary{background:#eef3f9;color:#1b4d89}
     </style>
 </head>
 <body>
-    <div class="wrap">
-        <h1>404</h1>
-
-        <p>
-            <?php if (ENVIRONMENT !== 'production') : ?>
-                <?= nl2br(esc($message)) ?>
-            <?php else : ?>
-                <?= lang('Errors.sorryCannotFind') ?>
-            <?php endif; ?>
-        </p>
-    </div>
+<main class="error-shell">
+    <section class="error-card">
+        <div class="brand">TRACEOPS ERP</div>
+        <div class="code">404</div>
+        <h1>Página no encontrada</h1>
+        <p>La ruta solicitada no existe o fue trasladada. Regresa al espacio de trabajo principal para continuar.</p>
+        <div class="actions">
+            <a class="button button-primary" href="<?= base_url('/') ?>">Ir al dashboard</a>
+            <a class="button button-secondary" href="javascript:history.back()">Volver</a>
+        </div>
+    </section>
+</main>
 </body>
 </html>
