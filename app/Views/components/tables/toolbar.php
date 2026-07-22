@@ -12,6 +12,7 @@
  * @var int|null $resultCount
  * @var string|null $tableId
  * @var array<int, array<string, mixed>> $columns
+ * @var string|null $defaultDensity
  */
 
 $searchName = $searchName ?? 'q';
@@ -23,6 +24,7 @@ $bulkActionLabel = $bulkActionLabel ?? 'Acciones masivas';
 $resultCount = $resultCount ?? null;
 $tableId = $tableId ?? null;
 $columns = $columns ?? [];
+$defaultDensity = $defaultDensity ?? 'comfortable';
 $searchId = 'table-search-' . preg_replace('/[^a-zA-Z0-9_-]/', '-', $searchName);
 ?>
 <div class="to-table-toolbar" data-table-toolbar>
@@ -55,6 +57,13 @@ $searchId = 'table-search-' . preg_replace('/[^a-zA-Z0-9_-]/', '-', $searchName)
             <?= view('components/tables/column-manager', [
                 'tableId' => $tableId,
                 'columns' => $columns,
+            ]) ?>
+        <?php endif ?>
+
+        <?php if ($tableId !== null): ?>
+            <?= view('components/tables/density-selector', [
+                'tableId' => $tableId,
+                'defaultDensity' => $defaultDensity,
             ]) ?>
         <?php endif ?>
 
