@@ -3,13 +3,19 @@
 /**
  * TraceOps table density selector.
  *
- * @var string $tableId
+ * @var string|null $tableId
  * @var string|null $defaultDensity
  */
 
-$tableId = $tableId ?? 'enterprise-table';
-$defaultDensity = in_array(($defaultDensity ?? 'comfortable'), ['compact', 'comfortable', 'spacious'], true)
+$tableId = isset($tableId) && is_string($tableId) && $tableId !== ''
+    ? $tableId
+    : 'enterprise-table';
+$allowedDensities = ['compact', 'comfortable', 'spacious'];
+$requestedDensity = isset($defaultDensity) && is_string($defaultDensity)
     ? $defaultDensity
+    : 'comfortable';
+$defaultDensity = in_array($requestedDensity, $allowedDensities, true)
+    ? $requestedDensity
     : 'comfortable';
 $options = [
     'compact' => [
@@ -52,8 +58,8 @@ $options = [
                            data-density-option
                            <?= $value === $defaultDensity ? 'checked' : '' ?>>
                     <span>
-                        <strong><?= esc($option['label']) ?></strong>
-                        <small><?= esc($option['description']) ?></small>
+                        <strong><?= esc((string) ($option['label'] ?? $value)) ?></strong>
+                        <small><?= esc((string) ($option['description'] ?? '')) ?></small>
                     </span>
                 </label>
             <?php endforeach ?>
