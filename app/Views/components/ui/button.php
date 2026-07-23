@@ -1,5 +1,7 @@
 <?php
 
+use App\Libraries\TraceOps\UI\ComponentNormalizer;
+
 /**
  * TraceOps button component.
  *
@@ -13,28 +15,36 @@
  * @var array<string, scalar|null>|null $attributes
  */
 
-$label = (string) ($label ?? 'Acción');
-$requestedVariant = (string) ($variant ?? 'primary');
-$variant = in_array($requestedVariant, ['primary', 'secondary', 'ghost', 'danger'], true)
-    ? $requestedVariant
-    : 'primary';
-$href = isset($href) && trim((string) $href) !== '' ? (string) $href : null;
-$requestedType = (string) ($type ?? 'button');
-$type = in_array($requestedType, ['button', 'submit', 'reset'], true) ? $requestedType : 'button';
-$disabled = (bool) ($disabled ?? false);
-$loadingLabel = isset($loadingLabel) && trim((string) $loadingLabel) !== '' ? (string) $loadingLabel : null;
-$extraClass = trim((string) ($class ?? ''));
-$attributes = is_array($attributes ?? null) ? $attributes : [];
-$classes = trim('to-btn to-btn--' . $variant . ' ' . $extraClass);
+$viewData = get_defined_vars();
+$config = ComponentNormalizer::normalize($viewData, [
+    'label' => ['type' => 'string', 'default' => 'Acción'],
+    'variant' => [
+        'type' => 'enum',
+        'allowed' => ['primary', 'secondary', 'ghost', 'danger'],
+        'default' => 'primary',
+    ],
+    'href' => ['type' => 'nullable-string'],
+    'type' => [
+        'type' => 'enum',
+        'allowed' => ['button', 'submit', 'reset'],
+        'default' => 'button',
+    ],
+    'disabled' => ['type' => 'bool', 'default' => false],
+    'loadingLabel' => ['type' => 'nullable-string'],
+    'class' => ['type' => 'string', 'default' => ''],
+]);
+
+$label = $config['label'];
+$variant = $config['variant'];
+$href = $config['href'];
+$type = $config['type'];
+$disabled = $config['disabled'];
+$loadingLabel = $config['loadingLabel'];
+$classes = trim('to-btn to-btn--' . $variant . ' ' . $config['class']);
+$attributes = ComponentNormalizer::attributes($viewData['attributes'] ?? []);
 $attributeHtml = '';
 
 foreach ($attributes as $attribute => $attributeValue) {
-    $attribute = (string) $attribute;
-
-    if (! preg_match('/^[a-zA-Z_:][a-zA-Z0-9:._-]*$/', $attribute) || ! is_scalar($attributeValue)) {
-        continue;
-    }
-
     $attributeHtml .= ' ' . esc($attribute) . '="' . esc((string) $attributeValue) . '"';
 }
 
