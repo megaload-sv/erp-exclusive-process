@@ -1,0 +1,95 @@
+.to-export-menu {
+    position: relative;
+}
+
+.to-export-menu > summary {
+    list-style: none;
+    cursor: pointer;
+}
+
+.to-export-menu > summary::-webkit-details-marker {
+    display: none;
+}
+
+.to-export-menu[open] > summary {
+    border-color: var(--to-sys-color-primary);
+}
+
+.to-export-menu__panel {
+    position: absolute;
+    top: calc(100% + var(--to-ref-space-2));
+    right: 0;
+    z-index: 20;
+    width: min(24rem, calc(100vw - 2rem));
+    padding: var(--to-ref-space-4);
+    border: 1px solid var(--to-sys-color-border);
+    border-radius: var(--to-sys-radius-container);
+    background: var(--to-sys-color-surface);
+    box-shadow: var(--to-sys-shadow-container);
+}
+
+.to-export-menu__header {
+    display: grid;
+    gap: var(--to-ref-space-1);
+    margin-bottom: var(--to-ref-space-3);
+}
+
+.to-export-menu__header span,
+.to-export-menu__option small,
+.to-export-menu__status {
+    color: var(--to-sys-color-text-muted);
+    font-size: var(--to-ref-font-size-sm);
+}
+
+.to-export-menu__options {
+    display: grid;
+    gap: var(--to-ref-space-1);
+}
+
+.to-export-menu__option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--to-ref-space-4);
+    width: 100%;
+    padding: var(--to-ref-space-3);
+    border: 0;
+    border-radius: var(--to-ref-radius-sm);
+    background: transparent;
+    color: var(--to-sys-color-text);
+    text-align: left;
+    cursor: pointer;
+}
+
+.to-export-menu__option:hover,
+.to-export-menu__option:focus-visible {
+    background: var(--to-sys-color-surface-muted);
+}
+
+.to-export-menu__option > span:first-child {
+    display: grid;
+    gap: var(--to-ref-space-1);
+}
+
+.to-export-menu__option > span:last-child {
+    padding: .2rem .45rem;
+    border-radius: var(--to-ref-radius-full);
+    background: var(--to-sys-color-surface-muted);
+    color: var(--to-sys-color-text-subtle);
+    font-size: var(--to-ref-font-size-xs);
+    font-weight: var(--to-ref-font-weight-semibold);
+}
+
+.to-export-menu__status {
+    min-height: 1.25rem;
+    margin: var(--to-ref-space-3) 0 0;
+    padding-top: var(--to-ref-space-3);
+    border-top: 1px solid var(--to-sys-color-border);
+}
+
+@media (max-width: 47.99rem) {
+    .to-export-menu__panel {
+        right: auto;
+        left: 0;
+    }
+}

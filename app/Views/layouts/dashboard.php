@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="<?= base_url('assets/css/design-system.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/form-system.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/form-feedback.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/table-system.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/table-states.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/table-export.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/table-context-menu.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/app.css') ?>">
     <?= $this->renderSection('styles') ?>
 </head>
@@ -29,30 +33,17 @@
                 <?php
                     $isDashboard = $key === 'dashboard';
                     $classes = ['nav-item'];
-
-                    if ($isDashboard) {
-                        $classes[] = 'active';
-                    }
-
-                    if (! $module['enabled']) {
-                        $classes[] = 'disabled';
-                    }
+                    if ($isDashboard) { $classes[] = 'active'; }
+                    if (! $module['enabled']) { $classes[] = 'disabled'; }
                 ?>
-
                 <?php if ($module['enabled']): ?>
                     <a class="<?= esc(implode(' ', $classes)) ?>" href="<?= site_url(ltrim($module['route'], '/')) ?>">
-                        <span>
-                            <span class="nav-icon"><?= esc(strtoupper(substr($module['label'], 0, 1))) ?></span>
-                            <?= esc($module['label']) ?>
-                        </span>
+                        <span><span class="nav-icon"><?= esc(strtoupper(substr($module['label'], 0, 1))) ?></span><?= esc($module['label']) ?></span>
                         <?php if ($isDashboard): ?><small>Inicio</small><?php endif ?>
                     </a>
                 <?php else: ?>
                     <span class="<?= esc(implode(' ', $classes)) ?>" aria-disabled="true">
-                        <span>
-                            <span class="nav-icon"><?= esc(strtoupper(substr($module['label'], 0, 1))) ?></span>
-                            <?= esc($module['label']) ?>
-                        </span>
+                        <span><span class="nav-icon"><?= esc(strtoupper(substr($module['label'], 0, 1))) ?></span><?= esc($module['label']) ?></span>
                         <small>Próximamente</small>
                     </span>
                 <?php endif ?>
@@ -67,10 +58,7 @@
 
     <main id="main-content" class="main-content" tabindex="-1">
         <header class="topbar">
-            <div>
-                <p class="eyebrow">Plataforma de gestión</p>
-                <h1><?= esc($title ?? 'Dashboard') ?></h1>
-            </div>
+            <div><p class="eyebrow">Plataforma de gestión</p><h1><?= esc($title ?? 'Dashboard') ?></h1></div>
             <div class="topbar-actions">
                 <?= view('components/ui/badge', [
                     'label' => strtoupper(ENVIRONMENT),
@@ -87,6 +75,9 @@
     </main>
 </div>
 <script src="<?= base_url('assets/js/form-system.js') ?>" defer></script>
+<script src="<?= base_url('assets/js/table-system.js') ?>" defer></script>
+<script src="<?= base_url('assets/js/table-export.js') ?>" defer></script>
+<script src="<?= base_url('assets/js/table-context-menu.js') ?>" defer></script>
 <?= $this->renderSection('scripts') ?>
 </body>
 </html>

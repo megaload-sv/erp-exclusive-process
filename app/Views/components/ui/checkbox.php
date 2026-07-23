@@ -3,24 +3,25 @@
 /**
  * TraceOps checkbox component.
  *
- * @var string $name
- * @var string $label
+ * @var string|null $name
+ * @var string|null $label
  * @var string|null $id
- * @var string|null $value
+ * @var string|int|float|null $value
  * @var string|null $description
- * @var bool|null $checked
- * @var bool|null $disabled
- * @var bool|null $required
+ * @var bool|int|string|null $checked
+ * @var bool|int|string|null $disabled
+ * @var bool|int|string|null $required
  */
 
-$name = $name ?? '';
-$label = $label ?? '';
-$id = $id ?? $name;
-$value = $value ?? '1';
-$description = $description ?? null;
-$checked = $checked ?? false;
-$disabled = $disabled ?? false;
-$required = $required ?? false;
+$name = trim((string) ($name ?? ''));
+$label = trim((string) ($label ?? ''));
+$id = trim((string) ($id ?? $name));
+$id = $id !== '' ? $id : $name;
+$value = (string) ($value ?? '1');
+$description = isset($description) && $description !== '' ? (string) $description : null;
+$checked = filter_var($checked ?? false, FILTER_VALIDATE_BOOL);
+$disabled = filter_var($disabled ?? false, FILTER_VALIDATE_BOOL);
+$required = filter_var($required ?? false, FILTER_VALIDATE_BOOL);
 $descriptionId = $description !== null ? $id . '-description' : null;
 ?>
 <label class="to-choice <?= $disabled ? 'to-choice--disabled' : '' ?>" for="<?= esc($id) ?>">

@@ -1,36 +1,36 @@
 <?php
 
+use App\Libraries\TraceOps\UI\ComponentNormalizer;
+use App\Libraries\TraceOps\UI\Components\ButtonComponent;
+
 /**
  * TraceOps button component.
  *
- * @var string $label
+ * @var string|null $label
  * @var string|null $variant primary|secondary|ghost|danger
  * @var string|null $href
- * @var string|null $type
+ * @var string|null $type button|submit|reset
  * @var bool|null $disabled
  * @var string|null $loadingLabel
  * @var string|null $class
- * @var array<string, string>|null $attributes
+ * @var array<string, scalar|null>|null $attributes
  */
 
-$variant = $variant ?? 'primary';
-$href = $href ?? null;
-$type = $type ?? 'button';
-$disabled = $disabled ?? false;
-$loadingLabel = $loadingLabel ?? null;
-$extraClass = $class ?? '';
-$attributes = $attributes ?? [];
-$allowedVariants = ['primary', 'secondary', 'ghost', 'danger'];
+$viewData = get_defined_vars();
+$config = ButtonComponent::normalize($viewData);
 
-if (! in_array($variant, $allowedVariants, true)) {
-    $variant = 'primary';
-}
-
-$classes = trim('to-btn to-btn--' . $variant . ' ' . $extraClass);
+$label = $config['label'];
+$variant = $config['variant'];
+$href = $config['href'];
+$type = $config['type'];
+$disabled = $config['disabled'];
+$loadingLabel = $config['loadingLabel'];
+$classes = trim('to-btn to-btn--' . $variant . ' ' . $config['class']);
+$attributes = ComponentNormalizer::attributes($viewData['attributes'] ?? []);
 $attributeHtml = '';
 
 foreach ($attributes as $attribute => $attributeValue) {
-    $attributeHtml .= ' ' . esc($attribute) . '="' . esc($attributeValue) . '"';
+    $attributeHtml .= ' ' . esc($attribute) . '="' . esc((string) $attributeValue) . '"';
 }
 
 if ($loadingLabel !== null) {
