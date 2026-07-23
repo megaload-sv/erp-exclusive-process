@@ -9,11 +9,38 @@ use PHPUnit\Framework\TestCase;
 
 final class ButtonComponentTest extends TestCase
 {
-    public function testItExposesItsDefinition(): void
+    public function testItExposesItsDefinitionAndMetadata(): void
     {
+        $metadata = ButtonComponent::metadata();
+
         self::assertSame('button', ButtonComponent::name());
         self::assertSame('components/ui/button', ButtonComponent::view());
-        self::assertSame('actions', ButtonComponent::metadata()['category']);
+        self::assertSame('button', $metadata['name']);
+        self::assertSame('components/ui/button', $metadata['view']);
+        self::assertSame('actions', $metadata['category']);
+        self::assertSame('1.0.0', $metadata['version']);
+        self::assertSame(
+            'Enterprise action button with link and loading support.',
+            $metadata['description']
+        );
+        self::assertSame(ButtonComponent::schema(), $metadata['schema']);
+    }
+
+    public function testItDefinesTheExpectedSchema(): void
+    {
+        $schema = ButtonComponent::schema();
+
+        self::assertSame(
+            ['label', 'variant', 'href', 'type', 'disabled', 'loadingLabel', 'class'],
+            array_keys($schema)
+        );
+        self::assertSame('Acción', $schema['label']['default']);
+        self::assertSame(
+            ['primary', 'secondary', 'ghost', 'danger'],
+            $schema['variant']['allowed']
+        );
+        self::assertSame(['button', 'submit', 'reset'], $schema['type']['allowed']);
+        self::assertFalse($schema['disabled']['default']);
     }
 
     public function testItNormalizesDefaultProperties(): void
@@ -29,27 +56,31 @@ final class ButtonComponentTest extends TestCase
         self::assertSame('', $props['class']);
     }
 
-    public function testItRejectsUnsupportedEnumValues(): void
+    public function testItRejectsUnsupportedValuesAndIgnoresUnknownProperties(): void
     {
         $props = ButtonComponent::normalize([
             'variant' => 'unsupported',
             'type' => 'invalid',
+            'disabled' => 'unknown',
+            'unknown' => 'value',
         ]);
 
         self::assertSame('primary', $props['variant']);
         self::assertSame('button', $props['type']);
+        self::assertFalse($props['disabled']);
+        self::assertArrayNotHasKey('unknown', $props);
     }
 
     public function testItNormalizesValidProperties(): void
     {
         $props = ButtonComponent::normalize([
-            'label' => 'Guardar',
+            'label' => ' Guardar ',
             'variant' => 'danger',
-            'href' => '/orders/1/delete',
+            'href' => ' /orders/1/delete ',
             'type' => 'submit',
-            'disabled' => true,
-            'loadingLabel' => 'Eliminando…',
-            'class' => 'w-full',
+            'disabled' => 'yes',
+            'loadingLabel' => ' Eliminando… ',
+            'class' => ' w-full ',
         ]);
 
         self::assertSame('Guardar', $props['label']);
