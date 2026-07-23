@@ -20,7 +20,7 @@ abstract class AbstractNode implements NodeInterface
 
     public function addChild(NodeInterface $child): static
     {
-        if ($child === $this || $child->root() === $this) {
+        if ($child === $this || $this->isDescendantOf($child)) {
             throw new InvalidArgumentException('A node cannot contain itself or one of its ancestors.');
         }
 
@@ -97,5 +97,20 @@ abstract class AbstractNode implements NodeInterface
         if ($this->parent !== null) {
             $this->parent->removeChild($this);
         }
+    }
+
+    private function isDescendantOf(NodeInterface $candidate): bool
+    {
+        $node = $this->parent;
+
+        while ($node !== null) {
+            if ($node === $candidate) {
+                return true;
+            }
+
+            $node = $node->parent();
+        }
+
+        return false;
     }
 }
