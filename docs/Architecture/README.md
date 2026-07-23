@@ -15,6 +15,12 @@ This directory is the architectural source of truth for TraceOps Platform.
 9. Data Framework
 10. Roadmap
 
+## Pull request engineering records
+
+Implementation-specific decisions and completion criteria are documented under `docs/PR/`.
+
+- [PR-005 — TraceOps Foundation and Enterprise Table v1](../PR/PR-005.md)
+
 ## Architecture layers
 
 ```text
