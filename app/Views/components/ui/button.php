@@ -1,6 +1,7 @@
 <?php
 
 use App\Libraries\TraceOps\UI\ComponentNormalizer;
+use App\Libraries\TraceOps\UI\Components\ButtonComponent;
 
 /**
  * TraceOps button component.
@@ -16,23 +17,7 @@ use App\Libraries\TraceOps\UI\ComponentNormalizer;
  */
 
 $viewData = get_defined_vars();
-$config = ComponentNormalizer::normalize($viewData, [
-    'label' => ['type' => 'string', 'default' => 'Acción'],
-    'variant' => [
-        'type' => 'enum',
-        'allowed' => ['primary', 'secondary', 'ghost', 'danger'],
-        'default' => 'primary',
-    ],
-    'href' => ['type' => 'nullable-string'],
-    'type' => [
-        'type' => 'enum',
-        'allowed' => ['button', 'submit', 'reset'],
-        'default' => 'button',
-    ],
-    'disabled' => ['type' => 'bool', 'default' => false],
-    'loadingLabel' => ['type' => 'nullable-string'],
-    'class' => ['type' => 'string', 'default' => ''],
-]);
+$config = ButtonComponent::normalize($viewData);
 
 $label = $config['label'];
 $variant = $config['variant'];
