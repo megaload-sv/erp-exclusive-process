@@ -54,7 +54,12 @@
 <section class="content-panel">
     <div class="section-heading">
         <div><p class="eyebrow">Components</p><h2>Button</h2><p>Acciones principales, secundarias, discretas y destructivas.</p></div>
-        <?= view('components/ui/badge', ['label' => 'Ready', 'variant' => 'success']) ?>
+        <?= view('components/ui/badge', ['label' => 'Stable 1.0', 'variant' => 'success']) ?>
+    </div>
+    <div class="to-catalog-grid" aria-label="Estado técnico del componente Button">
+        <article class="to-card"><div class="to-card__body"><strong>Schema driven</strong><p>Propiedades declaradas y normalizadas mediante <code>ButtonComponent</code>.</p></div></article>
+        <article class="to-card"><div class="to-card__body"><strong>Normalized</strong><p>Defaults, enums, booleanos y valores nullable pasan por <code>ComponentNormalizer</code>.</p></div></article>
+        <article class="to-card"><div class="to-card__body"><strong>Tested</strong><p>Definición, metadata, propiedades válidas e inválidas cubiertas por PHPUnit.</p></div></article>
     </div>
     <div class="to-component-preview" aria-label="Variantes del componente Button">
         <?= view('components/ui/button', ['label' => 'Guardar cambios', 'variant' => 'primary']) ?>
