@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Libraries\TraceOps\Core;
 
+use App\Libraries\TraceOps\Core\Contracts\ComponentDiscoveryInterface;
 use App\Libraries\TraceOps\UI\BaseComponent;
 
 final class ComponentManager
@@ -12,13 +13,18 @@ final class ComponentManager
 
     private ComponentFactory $factory;
 
+    private ComponentDiscoveryInterface $discovery;
+
     /**
      * @param iterable<class-string<BaseComponent>> $components
      */
-    public function __construct(iterable $components = [])
-    {
+    public function __construct(
+        iterable $components = [],
+        ?ComponentDiscoveryInterface $discovery = null
+    ) {
         $this->registry = new ComponentRegistry($components);
         $this->factory = new ComponentFactory($this->registry);
+        $this->discovery = $discovery ?? new ComponentDiscovery();
     }
 
     /**
@@ -27,6 +33,17 @@ final class ComponentManager
     public function register(string $componentClass): self
     {
         $this->registry->register($componentClass);
+
+        return $this;
+    }
+
+    public function discover(string $directory, string $namespace): self
+    {
+        foreach ($this->discovery->discover($directory, $namespace) as $componentClass) {
+            if (! $this->registry->has($componentClass::name())) {
+                $this->registry->register($componentClass);
+            }
+        }
 
         return $this;
     }
