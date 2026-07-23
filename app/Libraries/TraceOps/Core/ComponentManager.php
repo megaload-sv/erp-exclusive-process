@@ -6,6 +6,9 @@ namespace App\Libraries\TraceOps\Core;
 
 use App\Libraries\TraceOps\Core\Contracts\ComponentDiscoveryInterface;
 use App\Libraries\TraceOps\UI\BaseComponent;
+use App\Libraries\TraceOps\UI\Rendering\Contracts\RendererInterface;
+use App\Libraries\TraceOps\UI\Rendering\HtmlViewRenderer;
+use App\Libraries\TraceOps\UI\Rendering\RenderContext;
 
 final class ComponentManager
 {
@@ -15,16 +18,20 @@ final class ComponentManager
 
     private ComponentDiscoveryInterface $discovery;
 
+    private RendererInterface $renderer;
+
     /**
      * @param iterable<class-string<BaseComponent>> $components
      */
     public function __construct(
         iterable $components = [],
-        ?ComponentDiscoveryInterface $discovery = null
+        ?ComponentDiscoveryInterface $discovery = null,
+        ?RendererInterface $renderer = null,
     ) {
         $this->registry = new ComponentRegistry($components);
         $this->factory = new ComponentFactory($this->registry);
         $this->discovery = $discovery ?? new ComponentDiscovery();
+        $this->renderer = $renderer ?? new HtmlViewRenderer();
     }
 
     /**
@@ -54,6 +61,22 @@ final class ComponentManager
     public function make(string $name, array $props = []): BaseComponent
     {
         return $this->factory->make($name, $props);
+    }
+
+    public function render(BaseComponent $component, ?RenderContext $context = null): string
+    {
+        return $this->renderer->render($component, $context);
+    }
+
+    /**
+     * @param array<string, mixed> $props
+     */
+    public function renderComponent(
+        string $name,
+        array $props = [],
+        ?RenderContext $context = null,
+    ): string {
+        return $this->render($this->make($name, $props), $context);
     }
 
     public function has(string $name): bool
