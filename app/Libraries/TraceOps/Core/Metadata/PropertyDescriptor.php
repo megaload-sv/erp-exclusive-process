@@ -9,7 +9,7 @@ use App\Libraries\TraceOps\Core\Metadata\Contracts\DescriptorInterface;
 
 final class PropertyDescriptor implements DescriptorInterface
 {
-    /** @param list<mixed> $values @param list<string> $validation */
+    /** @param list<mixed> $values @param list<string> $validation @param array<string, mixed> $metadata */
     public function __construct(
         private readonly string $name,
         private readonly string $type = 'mixed',
@@ -22,6 +22,7 @@ final class PropertyDescriptor implements DescriptorInterface
         private readonly bool $sortable = false,
         private readonly bool $filterable = false,
         private readonly array $validation = [],
+        private readonly array $metadata = [],
     ) {
     }
 
@@ -45,11 +46,15 @@ final class PropertyDescriptor implements DescriptorInterface
             sortable: (bool) ($schema['sortable'] ?? false),
             filterable: (bool) ($schema['filterable'] ?? false),
             validation: array_values($schema['validation'] ?? []),
+            metadata: is_array($schema['metadata'] ?? null) ? $schema['metadata'] : [],
         );
     }
 
     public function name(): string { return $this->name; }
     public function type(): string { return $this->type; }
+
+    /** @return array<string, mixed> */
+    public function metadata(): array { return $this->metadata; }
 
     public function toArray(): array
     {
@@ -65,6 +70,7 @@ final class PropertyDescriptor implements DescriptorInterface
             'sortable' => $this->sortable,
             'filterable' => $this->filterable,
             'validation' => $this->validation,
+            'metadata' => $this->metadata,
         ], static fn (mixed $value): bool => $value !== null && $value !== []);
     }
 }
