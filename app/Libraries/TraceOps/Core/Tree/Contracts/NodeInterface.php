@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Libraries\TraceOps\Core\Tree\Contracts;
 
 use App\Libraries\TraceOps\Core\Tree\NodeCollection;
+use App\Libraries\TraceOps\Core\Tree\SlotCollection;
 
 interface NodeInterface
 {
@@ -15,6 +16,18 @@ interface NodeInterface
     public function removeChild(NodeInterface $child): static;
 
     public function children(): NodeCollection;
+
+    public function setSlot(string $name, NodeInterface ...$nodes): static;
+
+    public function addToSlot(string $name, NodeInterface $node): static;
+
+    public function removeFromSlot(string $name, NodeInterface $node): static;
+
+    public function clearSlot(string $name): static;
+
+    public function slot(string $name): NodeCollection;
+
+    public function slots(): SlotCollection;
 
     public function parent(): ?NodeInterface;
 
