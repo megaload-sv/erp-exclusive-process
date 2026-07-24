@@ -55,6 +55,7 @@ final class ButtonComponent extends BaseComponent
             ],
             'href' => [
                 'type' => StringType::class,
+                'nullable' => true,
                 'label' => 'Destination URL',
                 'metadata' => SemanticMetadata::make()->group('Navigation')->placeholder('/customers')->order(30)->toArray(),
             ],
@@ -64,7 +65,7 @@ final class ButtonComponent extends BaseComponent
                 'default' => 'button',
             ],
             'disabled' => ['type' => BooleanType::class, 'default' => false],
-            'loadingLabel' => ['type' => StringType::class],
+            'loadingLabel' => ['type' => StringType::class, 'nullable' => true],
             'class' => ['type' => StringType::class, 'default' => ''],
         ];
     }
