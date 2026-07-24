@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Libraries\TraceOps\UI;
 
-abstract class BaseComponent
+use App\Libraries\TraceOps\Core\Tree\AbstractNode;
+
+abstract class BaseComponent extends AbstractNode
 {
     /**
      * @var array<string, mixed>
@@ -16,6 +18,7 @@ abstract class BaseComponent
      */
     final public function __construct(array $props = [])
     {
+        parent::__construct();
         $this->props = static::normalize($props);
     }
 
@@ -27,6 +30,11 @@ abstract class BaseComponent
      * @return array<string, array<string, mixed>>
      */
     abstract public static function schema(): array;
+
+    final public function nodeName(): string
+    {
+        return static::name();
+    }
 
     /**
      * @return array<string, mixed>
