@@ -22,9 +22,9 @@ final class DeveloperController extends BaseController
 
         foreach ($descriptors as $descriptor) {
             $data = $descriptor->toArray();
-            $slotCount += count($data['slots']);
-            $propertyCount += count($data['properties']);
-            $capabilityCount += count($data['capabilities']);
+            $slotCount += count($data['slots'] ?? []);
+            $propertyCount += count($data['properties'] ?? []);
+            $capabilityCount += count($data['capabilities'] ?? []);
         }
 
         return view('developer/index', array_merge($this->viewData, [
