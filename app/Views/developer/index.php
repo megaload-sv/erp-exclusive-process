@@ -33,6 +33,42 @@
         </ul></div>
     </article>
     <article class="to-card">
+        <header class="to-card__header"><p class="eyebrow">Knowledge Registry</p><h2>Semantic Inventory</h2></header>
+        <div class="to-card__body">
+            <p>Inventario unificado de todas las entidades conocidas por el Runtime.</p>
+            <dl class="developer-metadata">
+                <?php foreach ($knowledgeSummary as $kind => $count): ?>
+                    <div><dt><?= esc(ucfirst($kind)) ?></dt><dd><?= esc((string) $count) ?></dd></div>
+                <?php endforeach ?>
+            </dl>
+        </div>
+    </article>
+</section>
+
+<section class="content-panel">
+    <div class="section-heading"><div>
+        <p class="eyebrow">Semantic Knowledge Layer</p><h2>Knowledge Explorer</h2>
+        <p>Una sola identidad consultable para componentes, propiedades, tipos, capacidades, metadatos y slots.</p>
+    </div></div>
+    <div class="developer-grid">
+        <?php foreach ($knowledgeCatalog as $entity): ?>
+            <article class="to-card"><header class="to-card__header">
+                <p class="eyebrow"><?= esc($entity['kind']) ?></p>
+                <h2><?= esc($entity['name']) ?></h2>
+            </header><div class="to-card__body">
+                <dl class="developer-metadata">
+                    <div><dt>Identity</dt><dd><code><?= esc($entity['identity']) ?></code></dd></div>
+                </dl>
+                <?php if (! empty($entity['attributes'])): ?>
+                    <pre><?= esc(json_encode($entity['attributes'], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) ?></pre>
+                <?php endif ?>
+            </div></article>
+        <?php endforeach ?>
+    </div>
+</section>
+
+<section class="developer-grid">
+    <article class="to-card">
         <header class="to-card__header"><p class="eyebrow">Behavior Engine</p><h2>Capability Explorer</h2></header>
         <div class="to-card__body">
             <?php foreach ($capabilityCatalog as $capability): ?>
@@ -47,22 +83,20 @@
             <?php endforeach ?>
         </div>
     </article>
-</section>
-
-<section class="content-panel">
-    <div class="section-heading"><div>
-        <p class="eyebrow">Knowledge Graph</p><h2>Relationship Explorer</h2>
-        <p>Relaciones semánticas derivadas automáticamente desde los descriptores del Runtime.</p>
-    </div></div>
-    <div class="developer-properties">
-        <?php foreach ($relationshipCatalog as $relationship): ?>
-            <div>
-                <strong><?= esc($relationship['source']) ?></strong>
-                <code><?= esc($relationship['type']) ?></code>
-                <small><?= esc($relationship['target']) ?></small>
+    <article class="to-card">
+        <header class="to-card__header"><p class="eyebrow">Knowledge Graph</p><h2>Relationship Explorer</h2></header>
+        <div class="to-card__body">
+            <div class="developer-properties">
+                <?php foreach ($relationshipCatalog as $relationship): ?>
+                    <div>
+                        <strong><?= esc($relationship['source']) ?></strong>
+                        <code><?= esc($relationship['type']) ?></code>
+                        <small><?= esc($relationship['target']) ?></small>
+                    </div>
+                <?php endforeach ?>
             </div>
-        <?php endforeach ?>
-    </div>
+        </div>
+    </article>
 </section>
 
 <section class="content-panel">
