@@ -1,0 +1,101 @@
+.developer-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.developer-stat .to-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.developer-stat span {
+    color: var(--to-sys-color-text-muted, #64748b);
+    font-size: .85rem;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.developer-stat strong {
+    font-size: 2rem;
+}
+
+.developer-grid {
+    display: grid;
+    grid-template-columns: minmax(240px, .7fr) minmax(0, 2fr);
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.developer-component {
+    border: 1px solid var(--to-sys-color-border, #dbe3ee);
+    border-radius: .75rem;
+    overflow: hidden;
+}
+
+.developer-component summary {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem;
+    cursor: pointer;
+    background: var(--to-sys-color-surface-subtle, #f8fafc);
+}
+
+.developer-component > :not(summary) {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.developer-metadata {
+    display: grid;
+    gap: .65rem;
+}
+
+.developer-metadata div {
+    display: grid;
+    grid-template-columns: 110px minmax(0, 1fr);
+    gap: 1rem;
+}
+
+.developer-metadata dt {
+    font-weight: 700;
+}
+
+.developer-metadata dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.developer-properties {
+    display: grid;
+    gap: .5rem;
+}
+
+.developer-properties > div {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: .75rem;
+    align-items: center;
+    padding: .65rem;
+    border: 1px solid var(--to-sys-color-border, #dbe3ee);
+    border-radius: .5rem;
+}
+
+.developer-component pre {
+    max-height: 360px;
+    overflow: auto;
+    padding: 1rem;
+    border-radius: .5rem;
+    background: #111827;
+    color: #e5e7eb;
+    font-size: .8rem;
+}
+
+@media (max-width: 900px) {
+    .developer-grid {
+        grid-template-columns: 1fr;
+    }
+}
