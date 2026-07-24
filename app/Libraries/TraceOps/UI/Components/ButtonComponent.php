@@ -8,6 +8,7 @@ use App\Libraries\TraceOps\Core\Capabilities\ClickableCapability;
 use App\Libraries\TraceOps\Core\Capabilities\DisableableCapability;
 use App\Libraries\TraceOps\Core\Capabilities\FocusableCapability;
 use App\Libraries\TraceOps\Core\Capabilities\RenderableCapability;
+use App\Libraries\TraceOps\Core\Metadata\SemanticMetadata;
 use App\Libraries\TraceOps\Core\Types\BooleanType;
 use App\Libraries\TraceOps\Core\Types\StringType;
 use App\Libraries\TraceOps\UI\BaseComponent;
@@ -33,13 +34,30 @@ final class ButtonComponent extends BaseComponent
     public static function schema(): array
     {
         return [
-            'label' => ['type' => StringType::class, 'label' => 'Label', 'default' => 'Acción'],
+            'label' => [
+                'type' => StringType::class,
+                'label' => 'Label',
+                'default' => 'Acción',
+                'metadata' => SemanticMetadata::make()
+                    ->summary('Visible action text')
+                    ->group('Content')
+                    ->placeholder('Guardar cambios')
+                    ->help('Use a concise verb that describes the action.')
+                    ->example('Guardar')
+                    ->order(10)
+                    ->toArray(),
+            ],
             'variant' => [
                 'type' => 'enum',
                 'allowed' => ['primary', 'secondary', 'ghost', 'danger'],
                 'default' => 'primary',
+                'metadata' => SemanticMetadata::make()->group('Appearance')->order(20)->toArray(),
             ],
-            'href' => ['type' => StringType::class, 'label' => 'Destination URL'],
+            'href' => [
+                'type' => StringType::class,
+                'label' => 'Destination URL',
+                'metadata' => SemanticMetadata::make()->group('Navigation')->placeholder('/customers')->order(30)->toArray(),
+            ],
             'type' => [
                 'type' => 'enum',
                 'allowed' => ['button', 'submit', 'reset'],

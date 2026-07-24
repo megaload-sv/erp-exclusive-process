@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Libraries\TraceOps\Core\Properties;
 
 use App\Libraries\TraceOps\Core\Contracts\TypeInterface;
+use App\Libraries\TraceOps\Core\Metadata\SemanticMetadata;
 
 final class Property
 {
@@ -17,6 +18,8 @@ final class Property
     private bool $sortable = false;
     private bool $filterable = false;
     private mixed $default = null;
+    private ?SemanticMetadata $metadata = null;
+
     /** @var list<string> */
     private array $validation = [];
 
@@ -38,6 +41,7 @@ final class Property
     public function sortable(bool $value = true): self { $this->sortable = $value; return $this; }
     public function filterable(bool $value = true): self { $this->filterable = $value; return $this; }
     public function default(mixed $value): self { $this->default = $value; return $this; }
+    public function metadata(SemanticMetadata $metadata): self { $this->metadata = $metadata; return $this; }
     public function validation(string ...$rules): self { $this->validation = array_values(array_unique([...$this->validation, ...$rules])); return $this; }
 
     /** @return array<string, mixed> */
@@ -53,6 +57,7 @@ final class Property
             'filterable' => $this->filterable,
             'default' => $this->default,
             'validation' => $this->validation,
+            'metadata' => $this->metadata?->toArray(),
         ], static fn (mixed $value): bool => $value !== null && $value !== []);
     }
 
