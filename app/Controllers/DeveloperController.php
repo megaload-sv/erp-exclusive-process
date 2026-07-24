@@ -10,6 +10,8 @@ use App\Libraries\TraceOps\Core\Capabilities\ClickableCapability;
 use App\Libraries\TraceOps\Core\Capabilities\DisableableCapability;
 use App\Libraries\TraceOps\Core\Capabilities\FocusableCapability;
 use App\Libraries\TraceOps\Core\Capabilities\RenderableCapability;
+use App\Libraries\TraceOps\Core\Metadata\MetadataRegistry;
+use App\Libraries\TraceOps\Core\Metadata\SemanticMetadata;
 use App\Libraries\TraceOps\Core\Types\BooleanType;
 use App\Libraries\TraceOps\Core\Types\EmailType;
 use App\Libraries\TraceOps\Core\Types\StringType;
@@ -34,6 +36,19 @@ final class DeveloperController extends BaseController
             BooleanType::class,
             EmailType::class,
             UuidType::class,
+        ]);
+        $metadataRegistry = new MetadataRegistry([
+            'component.button' => SemanticMetadata::make()
+                ->title('Button')
+                ->summary('Semantic action component')
+                ->category('components')
+                ->tags('ui', 'action')
+                ->since('0.3.0'),
+            'property.button.label' => SemanticMetadata::make()
+                ->title('Button label')
+                ->group('Content')
+                ->placeholder('Guardar cambios')
+                ->example('Guardar'),
         ]);
 
         $descriptors = $componentRegistry->descriptors();
@@ -66,6 +81,7 @@ final class DeveloperController extends BaseController
             'descriptors' => $descriptors,
             'capabilityCatalog' => $capabilityCatalog,
             'typeCatalog' => $typeRegistry->descriptors(),
+            'metadataCatalog' => $metadataRegistry->catalog(),
             'runtimeStats' => [
                 'components' => $componentRegistry->count(),
                 'descriptors' => count($descriptors),
@@ -74,6 +90,7 @@ final class DeveloperController extends BaseController
                 'capabilities' => $capabilityRegistry->count(),
                 'assignments' => $capabilityCount,
                 'types' => count($typeRegistry->all()),
+                'metadata' => $metadataRegistry->count(),
             ],
             'runtimeHealth' => [
                 'Framework Core' => true,
@@ -82,6 +99,7 @@ final class DeveloperController extends BaseController
                 'Descriptor Engine' => true,
                 'Capability Engine' => true,
                 'Semantic Type System' => true,
+                'Semantic Metadata Model' => true,
             ],
         ]));
     }
