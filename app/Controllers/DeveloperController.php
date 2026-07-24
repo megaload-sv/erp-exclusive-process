@@ -12,6 +12,7 @@ use App\Libraries\TraceOps\Core\Capabilities\FocusableCapability;
 use App\Libraries\TraceOps\Core\Capabilities\RenderableCapability;
 use App\Libraries\TraceOps\Core\Metadata\MetadataRegistry;
 use App\Libraries\TraceOps\Core\Metadata\SemanticMetadata;
+use App\Libraries\TraceOps\Core\Relationships\RelationshipGraphBuilder;
 use App\Libraries\TraceOps\Core\Types\BooleanType;
 use App\Libraries\TraceOps\Core\Types\EmailType;
 use App\Libraries\TraceOps\Core\Types\StringType;
@@ -39,19 +40,15 @@ final class DeveloperController extends BaseController
         ]);
         $metadataRegistry = new MetadataRegistry([
             'component.button' => SemanticMetadata::make()
-                ->title('Button')
-                ->summary('Semantic action component')
-                ->category('components')
-                ->tags('ui', 'action')
-                ->since('0.3.0'),
+                ->title('Button')->summary('Semantic action component')
+                ->category('components')->tags('ui', 'action')->since('0.3.0'),
             'property.button.label' => SemanticMetadata::make()
-                ->title('Button label')
-                ->group('Content')
-                ->placeholder('Guardar cambios')
-                ->example('Guardar'),
+                ->title('Button label')->group('Content')
+                ->placeholder('Guardar cambios')->example('Guardar'),
         ]);
 
         $descriptors = $componentRegistry->descriptors();
+        $relationshipRegistry = (new RelationshipGraphBuilder())->build($descriptors);
         $resolver = new BehaviorResolver($capabilityRegistry);
         $slotCount = 0;
         $propertyCount = 0;
@@ -82,6 +79,7 @@ final class DeveloperController extends BaseController
             'capabilityCatalog' => $capabilityCatalog,
             'typeCatalog' => $typeRegistry->descriptors(),
             'metadataCatalog' => $metadataRegistry->catalog(),
+            'relationshipCatalog' => $relationshipRegistry->catalog(),
             'runtimeStats' => [
                 'components' => $componentRegistry->count(),
                 'descriptors' => count($descriptors),
@@ -91,6 +89,7 @@ final class DeveloperController extends BaseController
                 'assignments' => $capabilityCount,
                 'types' => count($typeRegistry->all()),
                 'metadata' => $metadataRegistry->count(),
+                'relationships' => $relationshipRegistry->count(),
             ],
             'runtimeHealth' => [
                 'Framework Core' => true,
@@ -100,6 +99,7 @@ final class DeveloperController extends BaseController
                 'Capability Engine' => true,
                 'Semantic Type System' => true,
                 'Semantic Metadata Model' => true,
+                'Relationship Engine' => true,
             ],
         ]));
     }
