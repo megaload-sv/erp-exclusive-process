@@ -23,6 +23,18 @@
     </div>
 </section>
 
+<section class="content-panel">
+    <div class="section-heading"><div>
+        <p class="eyebrow">Runtime Core</p><h2>TSR Kernel</h2>
+        <p>Punto de entrada estable para todos los registros y el conocimiento semántico del Runtime.</p>
+    </div></div>
+    <dl class="developer-metadata">
+        <div><dt>Contract</dt><dd><code>RuntimeKernelInterface</code></dd></div>
+        <div><dt>Implementation</dt><dd><code><?= esc($kernelClass) ?></code></dd></div>
+        <div><dt>Consumers</dt><dd>Developer Console, Studio, API, generators and AI</dd></div>
+    </dl>
+</section>
+
 <section class="developer-grid">
     <article class="to-card">
         <header class="to-card__header"><p class="eyebrow">Diagnostics</p><h2>Runtime Health</h2></header>
