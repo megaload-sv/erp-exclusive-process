@@ -1,6 +1,9 @@
 name: TraceOps Runtime
 
 on:
+  push:
+    branches:
+      - feature/semantic-query-engine
   pull_request:
     branches:
       - main
