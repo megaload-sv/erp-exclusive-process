@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Libraries\TraceOps\UI\Components;
 
+use App\Libraries\TraceOps\Core\Capabilities\ClickableCapability;
+use App\Libraries\TraceOps\Core\Capabilities\DisableableCapability;
+use App\Libraries\TraceOps\Core\Capabilities\FocusableCapability;
+use App\Libraries\TraceOps\Core\Capabilities\RenderableCapability;
 use App\Libraries\TraceOps\UI\BaseComponent;
 
 final class ButtonComponent extends BaseComponent
@@ -21,6 +25,17 @@ final class ButtonComponent extends BaseComponent
     public static function category(): ?string
     {
         return 'actions';
+    }
+
+    /** @return list<string> */
+    public static function capabilities(): array
+    {
+        return [
+            RenderableCapability::class,
+            ClickableCapability::class,
+            FocusableCapability::class,
+            DisableableCapability::class,
+        ];
     }
 
     /** @return array<string, array<string, mixed>> */
