@@ -35,5 +35,38 @@ final class HtmlViewRendererTest extends TestCase
         self::assertSame('corporate', $payload['data']['_traceOps']['theme']);
         self::assertSame('es-SV', $payload['data']['_traceOps']['locale']);
         self::assertSame('megaload', $payload['data']['_traceOps']['tenant']);
+        self::assertSame([], $payload['data']['_traceOpsChildren']);
+        self::assertSame('', $payload['data']['_traceOpsChildrenHtml']);
+    }
+
+    public function testItRendersNestedComponentsDepthFirstAndInjectsTheirHtmlIntoTheParent(): void
+    {
+        $renderedLabels = [];
+        $renderer = new HtmlViewRenderer(
+            static function (string $view, array $data) use (&$renderedLabels): string {
+                $renderedLabels[] = $data['label'];
+
+                return sprintf(
+                    '<node label="%s">%s</node>',
+                    $data['label'],
+                    $data['_traceOpsChildrenHtml']
+                );
+            }
+        );
+
+        $root = new ButtonComponent(['label' => 'Root']);
+        $child = new ButtonComponent(['label' => 'Child']);
+        $grandchild = new ButtonComponent(['label' => 'Grandchild']);
+
+        $root->addChild($child);
+        $child->addChild($grandchild);
+
+        $output = $renderer->render($root, new RenderContext(locale: 'es-SV'));
+
+        self::assertSame(['Grandchild', 'Child', 'Root'], $renderedLabels);
+        self::assertSame(
+            '<node label="Root"><node label="Child"><node label="Grandchild"></node></node></node>',
+            $output
+        );
     }
 }
