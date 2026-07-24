@@ -10,9 +10,9 @@ use App\Libraries\TraceOps\Core\Capabilities\ClickableCapability;
 use App\Libraries\TraceOps\Core\Capabilities\DisableableCapability;
 use App\Libraries\TraceOps\Core\Capabilities\FocusableCapability;
 use App\Libraries\TraceOps\Core\Capabilities\RenderableCapability;
+use App\Libraries\TraceOps\Core\Knowledge\KnowledgeRegistryBuilder;
 use App\Libraries\TraceOps\Core\Metadata\MetadataRegistry;
 use App\Libraries\TraceOps\Core\Metadata\SemanticMetadata;
-use App\Libraries\TraceOps\Core\Relationships\RelationshipGraphBuilder;
 use App\Libraries\TraceOps\Core\Types\BooleanType;
 use App\Libraries\TraceOps\Core\Types\EmailType;
 use App\Libraries\TraceOps\Core\Types\StringType;
@@ -48,7 +48,13 @@ final class DeveloperController extends BaseController
         ]);
 
         $descriptors = $componentRegistry->descriptors();
-        $relationshipRegistry = (new RelationshipGraphBuilder())->build($descriptors);
+        $knowledgeRegistry = (new KnowledgeRegistryBuilder())->build(
+            $descriptors,
+            $capabilityRegistry,
+            $typeRegistry,
+            $metadataRegistry,
+        );
+        $relationshipRegistry = $knowledgeRegistry->relationships();
         $resolver = new BehaviorResolver($capabilityRegistry);
         $slotCount = 0;
         $propertyCount = 0;
@@ -80,6 +86,8 @@ final class DeveloperController extends BaseController
             'typeCatalog' => $typeRegistry->descriptors(),
             'metadataCatalog' => $metadataRegistry->catalog(),
             'relationshipCatalog' => $relationshipRegistry->catalog(),
+            'knowledgeCatalog' => $knowledgeRegistry->catalog(),
+            'knowledgeSummary' => $knowledgeRegistry->summary(),
             'runtimeStats' => [
                 'components' => $componentRegistry->count(),
                 'descriptors' => count($descriptors),
@@ -90,6 +98,7 @@ final class DeveloperController extends BaseController
                 'types' => count($typeRegistry->all()),
                 'metadata' => $metadataRegistry->count(),
                 'relationships' => $relationshipRegistry->count(),
+                'knowledge' => $knowledgeRegistry->count(),
             ],
             'runtimeHealth' => [
                 'Framework Core' => true,
@@ -100,6 +109,7 @@ final class DeveloperController extends BaseController
                 'Semantic Type System' => true,
                 'Semantic Metadata Model' => true,
                 'Relationship Engine' => true,
+                'Knowledge Registry' => true,
             ],
         ]));
     }
