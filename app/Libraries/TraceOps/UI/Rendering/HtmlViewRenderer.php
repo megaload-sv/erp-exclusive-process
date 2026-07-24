@@ -32,10 +32,27 @@ final class HtmlViewRenderer implements RendererInterface
             $renderedChildren[] = $this->renderChild($child, $context);
         }
 
+        $renderedSlots = [];
+
+        foreach ($component->slots() as $slotName => $slotNodes) {
+            $renderedSlots[$slotName] = [];
+
+            foreach ($slotNodes as $slotNode) {
+                $renderedSlots[$slotName][] = $this->renderChild($slotNode, $context);
+            }
+        }
+
+        $renderedSlotHtml = array_map(
+            static fn (array $items): string => implode('', $items),
+            $renderedSlots
+        );
+
         $data = array_merge($component->toViewData(), [
             '_traceOps' => $context->toArray(),
             '_traceOpsChildren' => $renderedChildren,
             '_traceOpsChildrenHtml' => implode('', $renderedChildren),
+            '_traceOpsSlots' => $renderedSlots,
+            '_traceOpsSlotsHtml' => $renderedSlotHtml,
         ]);
 
         if ($this->viewRenderer !== null) {

@@ -19,6 +19,12 @@ final class TreeWalker
             array_push($nodes, ...$this->depthFirst($child));
         }
 
+        foreach ($root->slots() as $slotNodes) {
+            foreach ($slotNodes as $node) {
+                array_push($nodes, ...$this->depthFirst($node));
+            }
+        }
+
         return $nodes;
     }
 
