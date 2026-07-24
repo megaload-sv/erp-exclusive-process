@@ -8,24 +8,15 @@ use App\Libraries\TraceOps\Core\Capabilities\ClickableCapability;
 use App\Libraries\TraceOps\Core\Capabilities\DisableableCapability;
 use App\Libraries\TraceOps\Core\Capabilities\FocusableCapability;
 use App\Libraries\TraceOps\Core\Capabilities\RenderableCapability;
+use App\Libraries\TraceOps\Core\Types\BooleanType;
+use App\Libraries\TraceOps\Core\Types\StringType;
 use App\Libraries\TraceOps\UI\BaseComponent;
 
 final class ButtonComponent extends BaseComponent
 {
-    public static function name(): string
-    {
-        return 'button';
-    }
-
-    public static function view(): string
-    {
-        return 'components/ui/button';
-    }
-
-    public static function category(): ?string
-    {
-        return 'actions';
-    }
+    public static function name(): string { return 'button'; }
+    public static function view(): string { return 'components/ui/button'; }
+    public static function category(): ?string { return 'actions'; }
 
     /** @return list<string> */
     public static function capabilities(): array
@@ -42,21 +33,21 @@ final class ButtonComponent extends BaseComponent
     public static function schema(): array
     {
         return [
-            'label' => ['type' => 'string', 'default' => 'Acción'],
+            'label' => ['type' => StringType::class, 'label' => 'Label', 'default' => 'Acción'],
             'variant' => [
                 'type' => 'enum',
                 'allowed' => ['primary', 'secondary', 'ghost', 'danger'],
                 'default' => 'primary',
             ],
-            'href' => ['type' => 'nullable-string'],
+            'href' => ['type' => StringType::class, 'label' => 'Destination URL'],
             'type' => [
                 'type' => 'enum',
                 'allowed' => ['button', 'submit', 'reset'],
                 'default' => 'button',
             ],
-            'disabled' => ['type' => 'bool', 'default' => false],
-            'loadingLabel' => ['type' => 'nullable-string'],
-            'class' => ['type' => 'string', 'default' => ''],
+            'disabled' => ['type' => BooleanType::class, 'default' => false],
+            'loadingLabel' => ['type' => StringType::class],
+            'class' => ['type' => StringType::class, 'default' => ''],
         ];
     }
 

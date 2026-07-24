@@ -10,6 +10,11 @@ use App\Libraries\TraceOps\Core\Capabilities\ClickableCapability;
 use App\Libraries\TraceOps\Core\Capabilities\DisableableCapability;
 use App\Libraries\TraceOps\Core\Capabilities\FocusableCapability;
 use App\Libraries\TraceOps\Core\Capabilities\RenderableCapability;
+use App\Libraries\TraceOps\Core\Types\BooleanType;
+use App\Libraries\TraceOps\Core\Types\EmailType;
+use App\Libraries\TraceOps\Core\Types\StringType;
+use App\Libraries\TraceOps\Core\Types\TypeRegistry;
+use App\Libraries\TraceOps\Core\Types\UuidType;
 use App\Libraries\TraceOps\UI\ComponentRegistry;
 use App\Libraries\TraceOps\UI\Components\ButtonComponent;
 
@@ -17,15 +22,18 @@ final class DeveloperController extends BaseController
 {
     public function index(): string
     {
-        $componentRegistry = new ComponentRegistry([
-            ButtonComponent::class,
-        ]);
-
+        $componentRegistry = new ComponentRegistry([ButtonComponent::class]);
         $capabilityRegistry = new CapabilityRegistry([
             RenderableCapability::class,
             ClickableCapability::class,
             FocusableCapability::class,
             DisableableCapability::class,
+        ]);
+        $typeRegistry = new TypeRegistry([
+            StringType::class,
+            BooleanType::class,
+            EmailType::class,
+            UuidType::class,
         ]);
 
         $descriptors = $componentRegistry->descriptors();
@@ -47,7 +55,6 @@ final class DeveloperController extends BaseController
                     static fn ($descriptor): string => $descriptor->type(),
                     $resolver->componentsSupporting($descriptors, $capability['name'])
                 );
-
                 return $capability;
             },
             $capabilityRegistry->catalog()
@@ -58,6 +65,7 @@ final class DeveloperController extends BaseController
             'runtimeVersion' => $this->traceOps->version,
             'descriptors' => $descriptors,
             'capabilityCatalog' => $capabilityCatalog,
+            'typeCatalog' => $typeRegistry->descriptors(),
             'runtimeStats' => [
                 'components' => $componentRegistry->count(),
                 'descriptors' => count($descriptors),
@@ -65,6 +73,7 @@ final class DeveloperController extends BaseController
                 'slots' => $slotCount,
                 'capabilities' => $capabilityRegistry->count(),
                 'assignments' => $capabilityCount,
+                'types' => count($typeRegistry->all()),
             ],
             'runtimeHealth' => [
                 'Framework Core' => true,
@@ -72,6 +81,7 @@ final class DeveloperController extends BaseController
                 'Named Slots' => true,
                 'Descriptor Engine' => true,
                 'Capability Engine' => true,
+                'Semantic Type System' => true,
             ],
         ]));
     }
