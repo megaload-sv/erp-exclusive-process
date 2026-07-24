@@ -51,6 +51,22 @@
 
 <section class="content-panel">
     <div class="section-heading"><div>
+        <p class="eyebrow">Knowledge Graph</p><h2>Relationship Explorer</h2>
+        <p>Relaciones semánticas derivadas automáticamente desde los descriptores del Runtime.</p>
+    </div></div>
+    <div class="developer-properties">
+        <?php foreach ($relationshipCatalog as $relationship): ?>
+            <div>
+                <strong><?= esc($relationship['source']) ?></strong>
+                <code><?= esc($relationship['type']) ?></code>
+                <small><?= esc($relationship['target']) ?></small>
+            </div>
+        <?php endforeach ?>
+    </div>
+</section>
+
+<section class="content-panel">
+    <div class="section-heading"><div>
         <p class="eyebrow">Knowledge Layer</p><h2>Metadata Explorer</h2>
         <p>Metadatos reutilizables para componentes, propiedades, tipos y futuras entidades del Runtime.</p>
     </div></div>
