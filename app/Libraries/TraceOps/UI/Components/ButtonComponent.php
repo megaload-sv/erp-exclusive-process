@@ -18,9 +18,12 @@ final class ButtonComponent extends BaseComponent
         return 'components/ui/button';
     }
 
-    /**
-     * @return array<string, array<string, mixed>>
-     */
+    public static function category(): ?string
+    {
+        return 'actions';
+    }
+
+    /** @return array<string, array<string, mixed>> */
     public static function schema(): array
     {
         return [
@@ -42,13 +45,10 @@ final class ButtonComponent extends BaseComponent
         ];
     }
 
-    /**
-     * @return array<string, mixed>
-     */
+    /** @return array<string, mixed> */
     public static function metadata(): array
     {
         return array_merge(parent::metadata(), [
-            'category' => 'actions',
             'description' => 'Enterprise action button with link and loading support.',
             'version' => '1.0.0',
         ]);
