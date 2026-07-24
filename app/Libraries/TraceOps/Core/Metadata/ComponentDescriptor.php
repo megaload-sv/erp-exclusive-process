@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Libraries\TraceOps\Core\Metadata;
 
+use App\Libraries\TraceOps\Core\Contracts\CapabilityInterface;
 use App\Libraries\TraceOps\Core\Metadata\Contracts\DescriptorInterface;
 
 final class ComponentDescriptor implements DescriptorInterface
@@ -30,7 +31,7 @@ final class ComponentDescriptor implements DescriptorInterface
     /**
      * @param array<string, array<string, mixed>> $schema
      * @param list<string> $slots
-     * @param list<string> $capabilities
+     * @param list<string|class-string<CapabilityInterface>> $capabilities
      * @param list<string> $events
      */
     public static function fromComponent(
@@ -50,13 +51,20 @@ final class ComponentDescriptor implements DescriptorInterface
             $properties[] = PropertyDescriptor::fromSchema($name, $definition);
         }
 
+        $capabilityNames = array_map(
+            static fn (string $capability): string => is_subclass_of($capability, CapabilityInterface::class)
+                ? $capability::name()
+                : $capability,
+            $capabilities
+        );
+
         return new self(
             type: $type,
             className: $className,
             view: $view,
             properties: $properties,
             slots: array_values($slots),
-            capabilities: array_values($capabilities),
+            capabilities: array_values(array_unique($capabilityNames)),
             events: array_values($events),
             displayName: $displayName,
             category: $category,
@@ -72,6 +80,21 @@ final class ComponentDescriptor implements DescriptorInterface
     public function properties(): array
     {
         return $this->properties;
+    }
+
+    /** @return list<string> */
+    public function capabilities(): array
+    {
+        return $this->capabilities;
+    }
+
+    public function supports(string $capability): bool
+    {
+        $name = is_subclass_of($capability, CapabilityInterface::class)
+            ? $capability::name()
+            : $capability;
+
+        return in_array($name, $this->capabilities, true);
     }
 
     public function toArray(): array
