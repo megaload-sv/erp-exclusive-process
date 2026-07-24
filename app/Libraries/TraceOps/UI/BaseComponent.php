@@ -77,7 +77,11 @@ abstract class BaseComponent extends AbstractNode
     /** @return array<string, mixed> */
     public static function metadata(): array
     {
-        return static::describe()->toArray();
+        return [
+            'name' => static::name(),
+            'view' => static::view(),
+            'schema' => static::schema(),
+        ];
     }
 
     /**
