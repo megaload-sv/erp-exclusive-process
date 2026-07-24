@@ -62,6 +62,24 @@ final class DeveloperController extends BaseController
             $kernel->capabilities()->catalog()
         );
 
+        $queryExamples = [
+            [
+                'label' => 'Clickable components',
+                'expression' => "query()->components()->supporting('clickable')->get()",
+                'result' => $kernel->query()->components()->supporting('clickable')->get()->catalog(),
+            ],
+            [
+                'label' => 'Components with label property',
+                'expression' => "query()->components()->havingProperty('label')->get()",
+                'result' => $kernel->query()->components()->havingProperty('label')->get()->catalog(),
+            ],
+            [
+                'label' => 'Ordered semantic types',
+                'expression' => "query()->types()->orderBy('name')->get()",
+                'result' => $kernel->query()->types()->orderBy('name')->get()->catalog(),
+            ],
+        ];
+
         return view('developer/index', array_merge($this->viewData, [
             'title' => 'Developer Console',
             'runtimeVersion' => $this->traceOps->version,
@@ -75,6 +93,7 @@ final class DeveloperController extends BaseController
             'knowledgeSummary' => $kernel->knowledge()->summary(),
             'runtimeStats' => $kernel->stats(),
             'runtimeHealth' => $kernel->health(),
+            'queryExamples' => $queryExamples,
         ]));
     }
 }
