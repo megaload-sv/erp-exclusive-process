@@ -7,6 +7,7 @@ namespace App\Libraries\TraceOps\Core\Runtime;
 use App\Libraries\TraceOps\Core\Capabilities\CapabilityRegistry;
 use App\Libraries\TraceOps\Core\Knowledge\KnowledgeRegistry;
 use App\Libraries\TraceOps\Core\Metadata\MetadataRegistry;
+use App\Libraries\TraceOps\Core\Query\RuntimeQuery;
 use App\Libraries\TraceOps\Core\Relationships\RelationshipRegistry;
 use App\Libraries\TraceOps\Core\Runtime\Contracts\RuntimeKernelInterface;
 use App\Libraries\TraceOps\Core\Types\TypeRegistry;
@@ -29,6 +30,7 @@ final class RuntimeKernel implements RuntimeKernelInterface
     public function metadata(): MetadataRegistry { return $this->metadata; }
     public function relationships(): RelationshipRegistry { return $this->knowledge->relationships(); }
     public function knowledge(): KnowledgeRegistry { return $this->knowledge; }
+    public function query(): RuntimeQuery { return new RuntimeQuery($this); }
 
     /** @return array<string, int> */
     public function stats(): array
@@ -73,6 +75,7 @@ final class RuntimeKernel implements RuntimeKernelInterface
             'Relationship Engine' => true,
             'Knowledge Registry' => true,
             'Runtime Kernel' => true,
+            'Semantic Query Engine' => true,
         ];
     }
 }
