@@ -9,11 +9,12 @@ Capability identifiers are stable architectural references. PR numbers may chang
 | C-003 | Named Slots | Delivered | PR-008 |
 | C-004 | Descriptor Engine | Delivered | PR-009 |
 | C-005 | ERP Developer Console | Delivered | PR-010 |
-| C-006 | Capability Engine | Planned | PR-011 |
-| C-007 | Type System | Planned | PR-012 |
-| C-008 | Metadata Registry | Planned | PR-013 |
-| C-009 | Visitor Engine | Planned | PR-014 |
-| C-010 | Render Preview | Planned | PR-015 |
+| — | Runtime Specification and Base Contracts | Stabilization | PR-011 |
+| C-006 | Capability Engine | Planned | PR-012 |
+| C-007 | Type System | Planned | PR-013 |
+| C-008 | Metadata Registry | Planned | PR-014 |
+| C-009 | Visitor Engine | Planned | PR-015 |
+| C-010 | Render Preview | Planned | PR-016 |
 
 ## Capability vocabulary
 
