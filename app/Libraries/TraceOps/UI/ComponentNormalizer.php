@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Libraries\TraceOps\UI;
 
+use App\Libraries\TraceOps\Core\Contracts\TypeInterface;
 use App\Libraries\TraceOps\Support\Arr;
 use App\Libraries\TraceOps\Support\Str;
 
@@ -19,13 +20,20 @@ final class ComponentNormalizer
         $normalized = [];
 
         foreach ($schema as $key => $rules) {
-            $type = is_string($rules['type'] ?? null) ? $rules['type'] : 'string';
+            $declaredType = is_string($rules['type'] ?? null) ? $rules['type'] : 'string';
+            $type = is_subclass_of($declaredType, TypeInterface::class)
+                ? $declaredType::name()
+                : $declaredType;
             $default = $rules['default'] ?? null;
+            $nullable = (bool) ($rules['nullable'] ?? false);
 
             $normalized[$key] = match ($type) {
                 'nullable-string' => Arr::nullableString($data, $key),
-                'bool' => Arr::bool($data, $key, is_bool($default) ? $default : false),
-                'int' => Arr::int(
+                'string', 'email', 'uuid' => $nullable
+                    ? Arr::nullableString($data, $key)
+                    : Arr::string($data, $key, is_string($default) ? $default : ''),
+                'bool', 'boolean' => Arr::bool($data, $key, is_bool($default) ? $default : false),
+                'int', 'integer' => Arr::int(
                     $data,
                     $key,
                     is_int($default) ? $default : 0,

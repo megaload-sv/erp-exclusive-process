@@ -12,15 +12,11 @@ class TraceOps extends BaseConfig
     public string $company = 'Grupo Megaload';
     public string $timezone = 'America/El_Salvador';
 
-    /**
-     * Feature flags available during the application foundation stage.
-     * They can later be moved to persistence without changing consumers.
-     *
-     * @var array<string, bool>
-     */
+    /** @var array<string, bool> */
     public array $features = [
         'dashboard'     => true,
         'health_check'  => true,
+        'developer'     => true,
         'crm'           => false,
         'workflow'      => false,
         'inventory'     => false,
@@ -28,17 +24,18 @@ class TraceOps extends BaseConfig
         'reporting'     => false,
     ];
 
-    /**
-     * Initial module registry. PR-005 will replace this static registry with
-     * module discovery and module-owned manifests.
-     *
-     * @var array<string, array<string, mixed>>
-     */
+    /** @var array<string, array<string, mixed>> */
     public array $modules = [
         'dashboard' => [
             'label'   => 'Dashboard',
             'route'   => '/',
             'icon'    => 'dashboard',
+            'enabled' => true,
+        ],
+        'developer' => [
+            'label'   => 'Developer',
+            'route'   => '/developer',
+            'icon'    => 'code',
             'enabled' => true,
         ],
         'crm' => [

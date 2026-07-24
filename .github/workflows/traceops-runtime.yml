@@ -1,0 +1,44 @@
+name: TraceOps Runtime
+
+on:
+  push:
+    branches:
+      - feature/semantic-query-engine
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime-validation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: intl, mbstring, json
+          coverage: none
+          tools: composer:v2
+
+      - name: Validate Composer files
+        run: composer validate --strict
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Validate TraceOps PHP syntax
+        shell: bash
+        run: |
+          find app/Libraries/TraceOps app/Controllers tests/unit/TraceOps -type f -name '*.php' -print0 \
+            | xargs -0 -n1 php -l
+
+      - name: Run complete PHPUnit suite
+        run: composer test
