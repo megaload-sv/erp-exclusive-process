@@ -26,6 +26,29 @@ final class ButtonComponentTest extends TestCase
         self::assertSame(ButtonComponent::schema(), $metadata['schema']);
     }
 
+    public function testMetadataRemainsBackwardCompatible(): void
+    {
+        $metadata = ButtonComponent::metadata();
+
+        self::assertArrayHasKey('name', $metadata);
+        self::assertArrayHasKey('view', $metadata);
+        self::assertArrayHasKey('schema', $metadata);
+        self::assertSame('button', $metadata['name']);
+        self::assertSame('components/ui/button', $metadata['view']);
+        self::assertSame(ButtonComponent::schema(), $metadata['schema']);
+    }
+
+    public function testDescribeReturnsSemanticDescriptor(): void
+    {
+        $descriptor = ButtonComponent::describe()->toArray();
+
+        self::assertSame('button', $descriptor['type']);
+        self::assertSame(ButtonComponent::class, $descriptor['class']);
+        self::assertSame('components/ui/button', $descriptor['view']);
+        self::assertArrayHasKey('properties', $descriptor);
+        self::assertSame('actions', $descriptor['category']);
+    }
+
     public function testItDefinesTheExpectedSchema(): void
     {
         $schema = ButtonComponent::schema();
