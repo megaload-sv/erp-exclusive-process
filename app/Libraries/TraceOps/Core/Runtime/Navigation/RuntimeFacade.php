@@ -39,16 +39,60 @@ final class RuntimeFacade
         return new RuntimeComponent($this->kernel, $descriptors[$type]);
     }
 
-    /** @return array<string, mixed> */
-    public function capabilities(): array
-    {
-        return $this->kernel->capabilities()->catalog();
-    }
-
-    /** @return array<string, mixed> */
+    /** @return list<RuntimeType> */
     public function types(): array
     {
-        return $this->kernel->types()->descriptors();
+        return array_values(array_map(
+            fn (array $descriptor, string $name): RuntimeType => new RuntimeType($this->kernel, $name, $descriptor),
+            $this->kernel->types()->descriptors(),
+            array_keys($this->kernel->types()->descriptors())
+        ));
+    }
+
+    public function type(string $name): RuntimeType
+    {
+        $descriptors = $this->kernel->types()->descriptors();
+        $normalized = strtolower(trim($name));
+
+        if (! isset($descriptors[$normalized])) {
+            throw new InvalidArgumentException("Runtime type [{$name}] is not registered.");
+        }
+
+        return new RuntimeType($this->kernel, $normalized, $descriptors[$normalized]);
+    }
+
+    /** @return list<RuntimeCapability> */
+    public function capabilities(): array
+    {
+        return array_map(
+            fn (array $descriptor): RuntimeCapability => new RuntimeCapability(
+                $this->kernel,
+                (string) $descriptor['name'],
+                $descriptor
+            ),
+            $this->kernel->capabilities()->catalog()
+        );
+    }
+
+    public function capability(string $name): RuntimeCapability
+    {
+        foreach ($this->kernel->capabilities()->catalog() as $descriptor) {
+            if (($descriptor['name'] ?? null) === $name) {
+                return new RuntimeCapability($this->kernel, $name, $descriptor);
+            }
+        }
+
+        throw new InvalidArgumentException("Runtime capability [{$name}] is not registered.");
+    }
+
+    /** @return list<SemanticObject> */
+    public function objects(): array
+    {
+        return [
+            ...$this->components(),
+            ...$this->types(),
+            ...$this->capabilities(),
+        ];
     }
 
     /** @return list<array<string, mixed>> */
