@@ -4,98 +4,18 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use App\Libraries\TraceOps\Core\Capabilities\BehaviorResolver;
-use App\Libraries\TraceOps\Core\Capabilities\CapabilityRegistry;
-use App\Libraries\TraceOps\Core\Capabilities\ClickableCapability;
-use App\Libraries\TraceOps\Core\Capabilities\DisableableCapability;
-use App\Libraries\TraceOps\Core\Capabilities\FocusableCapability;
-use App\Libraries\TraceOps\Core\Capabilities\RenderableCapability;
-use App\Libraries\TraceOps\Core\Metadata\MetadataRegistry;
-use App\Libraries\TraceOps\Core\Metadata\SemanticMetadata;
-use App\Libraries\TraceOps\Core\Runtime\RuntimeKernelBuilder;
-use App\Libraries\TraceOps\Core\Types\BooleanType;
-use App\Libraries\TraceOps\Core\Types\EmailType;
-use App\Libraries\TraceOps\Core\Types\StringType;
-use App\Libraries\TraceOps\Core\Types\TypeRegistry;
-use App\Libraries\TraceOps\Core\Types\UuidType;
-use App\Libraries\TraceOps\UI\ComponentRegistry;
-use App\Libraries\TraceOps\UI\Components\ButtonComponent;
+use App\Services\Studio\ExplorerService;
 
 final class StudioController extends BaseController
 {
     public function index(): string
     {
-        $kernel = (new RuntimeKernelBuilder())->build(
-            new ComponentRegistry([ButtonComponent::class]),
-            new CapabilityRegistry([
-                RenderableCapability::class,
-                ClickableCapability::class,
-                FocusableCapability::class,
-                DisableableCapability::class,
-            ]),
-            new TypeRegistry([
-                StringType::class,
-                BooleanType::class,
-                EmailType::class,
-                UuidType::class,
-            ]),
-            new MetadataRegistry([
-                'component.button' => SemanticMetadata::make()
-                    ->title('Button')->summary('Semantic action component')
-                    ->category('components')->tags('ui', 'action')->since('0.3.0'),
-                'property.button.label' => SemanticMetadata::make()
-                    ->title('Button label')->group('Content')
-                    ->placeholder('Guardar cambios')->example('Guardar'),
-            ]),
-        );
+        $explorer = (new ExplorerService())->build();
 
-        $descriptors = $kernel->components()->descriptors();
-        $resolver = new BehaviorResolver($kernel->capabilities());
-        $capabilityCatalog = array_map(
-            static function (array $capability) use ($resolver, $descriptors): array {
-                $capability['components'] = array_map(
-                    static fn ($descriptor): string => $descriptor->type(),
-                    $resolver->componentsSupporting($descriptors, $capability['name'])
-                );
-
-                return $capability;
-            },
-            $kernel->capabilities()->catalog()
-        );
-
-        $queryExamples = [
-            [
-                'label' => 'Clickable components',
-                'expression' => "query()->components()->supporting('clickable')->get()",
-                'result' => $kernel->query()->components()->supporting('clickable')->get()->catalog(),
-            ],
-            [
-                'label' => 'Components with label property',
-                'expression' => "query()->components()->havingProperty('label')->get()",
-                'result' => $kernel->query()->components()->havingProperty('label')->get()->catalog(),
-            ],
-            [
-                'label' => 'Ordered semantic types',
-                'expression' => "query()->types()->orderBy('name')->get()",
-                'result' => $kernel->query()->types()->orderBy('name')->get()->catalog(),
-            ],
-        ];
-
-        return view('studio/index', array_merge($this->viewData, [
+        return view('studio/index', array_merge($this->viewData, $explorer, [
             'title' => 'TraceOps Studio',
             'studioSection' => 'explorer',
             'runtimeVersion' => $this->traceOps->version,
-            'kernelClass' => $kernel::class,
-            'descriptors' => $descriptors,
-            'capabilityCatalog' => $capabilityCatalog,
-            'typeCatalog' => $kernel->types()->descriptors(),
-            'metadataCatalog' => $kernel->metadata()->catalog(),
-            'relationshipCatalog' => $kernel->relationships()->catalog(),
-            'knowledgeCatalog' => $kernel->knowledge()->catalog(),
-            'knowledgeSummary' => $kernel->knowledge()->summary(),
-            'runtimeStats' => $kernel->stats(),
-            'runtimeHealth' => $kernel->health(),
-            'queryExamples' => $queryExamples,
         ]));
     }
 }
