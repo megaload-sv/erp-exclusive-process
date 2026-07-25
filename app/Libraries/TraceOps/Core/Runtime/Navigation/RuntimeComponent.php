@@ -6,6 +6,7 @@ namespace App\Libraries\TraceOps\Core\Runtime\Navigation;
 
 use App\Libraries\TraceOps\Core\Metadata\ComponentDescriptor;
 use App\Libraries\TraceOps\Core\Runtime\Contracts\RuntimeKernelInterface;
+use App\Libraries\TraceOps\Core\Runtime\Services\RuntimeInspector;
 
 final class RuntimeComponent extends SemanticObject
 {
@@ -73,6 +74,11 @@ final class RuntimeComponent extends SemanticObject
             'view' => $this->descriptorData()['view'] ?? null,
             'data' => [],
         ];
+    }
+
+    public function inspector(): RuntimeInspector
+    {
+        return new RuntimeInspector($this);
     }
 
     public function descriptor(): ComponentDescriptor
