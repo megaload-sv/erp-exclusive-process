@@ -8,7 +8,11 @@ use App\Libraries\TraceOps\Core\Capabilities\CapabilityRegistry;
 use App\Libraries\TraceOps\Core\Capabilities\ClickableCapability;
 use App\Libraries\TraceOps\Core\Metadata\MetadataRegistry;
 use App\Libraries\TraceOps\Core\Metadata\SemanticMetadata;
+use App\Libraries\TraceOps\Core\Runtime\Navigation\RuntimeCapability;
+use App\Libraries\TraceOps\Core\Runtime\Navigation\RuntimeComponent;
 use App\Libraries\TraceOps\Core\Runtime\Navigation\RuntimeFacade;
+use App\Libraries\TraceOps\Core\Runtime\Navigation\RuntimeType;
+use App\Libraries\TraceOps\Core\Runtime\Navigation\SemanticObject;
 use App\Libraries\TraceOps\Core\Runtime\RuntimeKernelBuilder;
 use App\Libraries\TraceOps\Core\Types\StringType;
 use App\Libraries\TraceOps\Core\Types\TypeRegistry;
@@ -24,6 +28,8 @@ final class RuntimeFacadeTest extends CIUnitTestCase
         $runtime = RuntimeFacade::fromKernel($this->kernel());
         $button = $runtime->component('button');
 
+        self::assertInstanceOf(SemanticObject::class, $button);
+        self::assertSame('component', $button->kind());
         self::assertSame('component.button', $button->identity());
         self::assertSame('button', $button->type());
         self::assertSame('Button', $button->title());
@@ -40,9 +46,47 @@ final class RuntimeFacadeTest extends CIUnitTestCase
         $components = $runtime->components();
 
         self::assertCount(1, $components);
+        self::assertInstanceOf(RuntimeComponent::class, $components[0]);
         self::assertSame('component.button', $components[0]->identity());
         self::assertArrayHasKey('components', $runtime->stats());
         self::assertTrue($runtime->health()['Runtime Kernel']);
+    }
+
+    public function testItNavigatesSemanticTypes(): void
+    {
+        $runtime = RuntimeFacade::fromKernel($this->kernel());
+        $type = $runtime->type('string');
+
+        self::assertInstanceOf(RuntimeType::class, $type);
+        self::assertSame('type', $type->kind());
+        self::assertSame('type.string', $type->identity());
+        self::assertSame('string', $type->name());
+        self::assertNotEmpty($type->descriptor());
+        self::assertCount(1, $runtime->types());
+    }
+
+    public function testItNavigatesCapabilitiesAndTheirComponents(): void
+    {
+        $runtime = RuntimeFacade::fromKernel($this->kernel());
+        $capability = $runtime->capability('clickable');
+
+        self::assertInstanceOf(RuntimeCapability::class, $capability);
+        self::assertSame('capability', $capability->kind());
+        self::assertSame('capability.clickable', $capability->identity());
+        self::assertContains('button', $capability->components());
+        self::assertCount(1, $runtime->capabilities());
+    }
+
+    public function testItExposesAUnifiedSemanticObjectCollection(): void
+    {
+        $objects = RuntimeFacade::fromKernel($this->kernel())->objects();
+
+        self::assertCount(3, $objects);
+        self::assertContainsOnlyInstancesOf(SemanticObject::class, $objects);
+        self::assertSame(
+            ['component.button', 'type.string', 'capability.clickable'],
+            array_map(static fn (SemanticObject $object): string => $object->identity(), $objects)
+        );
     }
 
     public function testItRejectsUnknownComponents(): void
