@@ -81,7 +81,7 @@ final class StudioController extends BaseController
             ],
         ];
 
-        return view('developer/index', array_merge($this->viewData, [
+        return view('studio/index', array_merge($this->viewData, [
             'title' => 'TraceOps Studio',
             'studioSection' => 'explorer',
             'runtimeVersion' => $this->traceOps->version,
