@@ -71,7 +71,7 @@ final class ExplorerService
             $kernel->capabilities()->catalog()
         );
 
-        $components = array_map(
+        $components = array_values(array_map(
             static function ($descriptor) use ($metadataCatalog, $relationships): array {
                 $component = $descriptor->toArray();
                 $type = (string) $component['type'];
@@ -113,7 +113,7 @@ final class ExplorerService
                 ];
             },
             $descriptors
-        );
+        ));
 
         return [
             'kernelClass' => $kernel::class,
