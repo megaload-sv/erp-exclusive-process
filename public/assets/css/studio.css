@@ -1,0 +1,221 @@
+:root {
+    --studio-sidebar-width: 264px;
+    --studio-bg: #0b1020;
+    --studio-panel: #11182b;
+    --studio-panel-soft: #182238;
+    --studio-border: rgba(148, 163, 184, 0.18);
+    --studio-text: #e5e7eb;
+    --studio-muted: #94a3b8;
+    --studio-accent: #60a5fa;
+}
+
+.studio-body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--studio-bg);
+    color: var(--studio-text);
+}
+
+.studio-shell {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: var(--studio-sidebar-width) minmax(0, 1fr);
+}
+
+.studio-sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem;
+    background: #080d19;
+    border-right: 1px solid var(--studio-border);
+}
+
+.studio-brand {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--studio-border);
+}
+
+.studio-brand__mark,
+.studio-nav-icon {
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 auto;
+    border-radius: .6rem;
+    font-weight: 700;
+}
+
+.studio-brand__mark {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: #fff;
+}
+
+.studio-brand strong,
+.studio-brand small {
+    display: block;
+}
+
+.studio-brand small,
+.studio-navigation-label,
+.studio-nav-item small,
+.studio-sidebar__footer {
+    color: var(--studio-muted);
+}
+
+.studio-navigation-label {
+    margin: 1.5rem 0 .75rem;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.studio-navigation {
+    display: grid;
+    gap: .35rem;
+}
+
+.studio-nav-item {
+    min-height: 2.75rem;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .65rem .75rem;
+    border: 1px solid transparent;
+    border-radius: .7rem;
+    color: var(--studio-text);
+    text-decoration: none;
+}
+
+.studio-nav-item:hover,
+.studio-nav-item.is-active {
+    background: var(--studio-panel-soft);
+    border-color: var(--studio-border);
+}
+
+.studio-nav-item.is-active {
+    box-shadow: inset 3px 0 0 var(--studio-accent);
+}
+
+.studio-nav-item.is-disabled {
+    opacity: .55;
+    cursor: not-allowed;
+}
+
+.studio-nav-item small {
+    margin-left: auto;
+    font-size: .68rem;
+}
+
+.studio-nav-icon {
+    width: 1.8rem;
+    height: 1.8rem;
+    background: rgba(96, 165, 250, .12);
+    color: #bfdbfe;
+    font-size: .78rem;
+}
+
+.studio-sidebar__footer {
+    margin-top: auto;
+    display: grid;
+    gap: .45rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--studio-border);
+    font-size: .78rem;
+}
+
+.studio-sidebar__footer a {
+    color: #bfdbfe;
+}
+
+.studio-main {
+    min-width: 0;
+}
+
+.studio-topbar {
+    min-height: 84px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: rgba(11, 16, 32, .92);
+    border-bottom: 1px solid var(--studio-border);
+    backdrop-filter: blur(14px);
+}
+
+.studio-topbar h1 {
+    margin: .15rem 0 0;
+    color: #fff;
+}
+
+.studio-topbar__actions {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+}
+
+.studio-workspace {
+    padding: 1.5rem;
+}
+
+.studio-workspace .content-panel,
+.studio-workspace .to-card {
+    background: var(--studio-panel);
+    border-color: var(--studio-border);
+}
+
+.studio-workspace h2,
+.studio-workspace h3,
+.studio-workspace strong,
+.studio-workspace dt {
+    color: #f8fafc;
+}
+
+.studio-workspace p,
+.studio-workspace dd,
+.studio-workspace small {
+    color: #cbd5e1;
+}
+
+@media (max-width: 900px) {
+    .studio-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .studio-sidebar {
+        position: relative;
+        width: auto;
+        height: auto;
+    }
+
+    .studio-navigation {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .studio-sidebar__footer {
+        margin-top: 1rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .studio-topbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .studio-navigation {
+        grid-template-columns: 1fr;
+    }
+
+    .studio-workspace {
+        padding: 1rem;
+    }
+}
