@@ -5,172 +5,107 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-<section class="content-panel developer-hero" id="runtime-overview">
+<section class="content-panel developer-hero">
     <div class="section-heading">
         <div>
             <p class="eyebrow">Runtime Explorer</p>
-            <h2>Semantic Runtime Overview</h2>
-            <p>Explora el Kernel, sus catálogos y sus componentes desde la primera herramienta visual de TraceOps Studio.</p>
+            <h2>Semantic component discovery</h2>
+            <p>Busca, filtra y selecciona activos del Runtime sin inspeccionar directamente el código PHP.</p>
         </div>
-        <?= view('components/ui/badge', ['label' => 'Runtime healthy', 'variant' => 'success']) ?>
-    </div>
-
-    <div class="developer-toolbar">
-        <label class="developer-search">
-            <span>Buscar en el Explorer</span>
-            <input id="runtime-search" type="search" placeholder="button, clickable, string..." autocomplete="off">
-        </label>
-        <p id="runtime-search-status" aria-live="polite">Mostrando todo el Runtime.</p>
+        <?= view('components/ui/badge', [
+            'label' => in_array(false, $runtimeHealth, true) ? 'Runtime degraded' : 'Runtime healthy',
+            'variant' => in_array(false, $runtimeHealth, true) ? 'danger' : 'success',
+        ]) ?>
     </div>
 
     <div class="developer-stats" aria-label="Métricas del Runtime">
         <?php foreach ($runtimeStats as $label => $value): ?>
-            <article class="to-card developer-stat" data-runtime-searchable="<?= esc($label) ?> <?= esc((string) $value) ?>">
-                <div class="to-card__body">
-                    <span><?= esc(ucfirst($label)) ?></span>
-                    <strong><?= esc((string) $value) ?></strong>
-                </div>
+            <article class="to-card developer-stat">
+                <div class="to-card__body"><span><?= esc(ucfirst($label)) ?></span><strong><?= esc((string) $value) ?></strong></div>
             </article>
         <?php endforeach ?>
     </div>
 </section>
 
-<section class="developer-grid">
-    <article class="to-card" data-runtime-searchable="runtime kernel health diagnostics">
-        <header class="to-card__header">
-            <p class="eyebrow">Diagnostics</p>
-            <h2>Runtime Health</h2>
-        </header>
-        <div class="to-card__body">
-            <ul class="check-list">
-                <?php foreach ($runtimeHealth as $capability => $healthy): ?>
-                    <li>
-                        <span class="developer-health <?= $healthy ? 'is-healthy' : 'is-unhealthy' ?>"></span>
-                        <?= esc($capability) ?>
-                    </li>
-                <?php endforeach ?>
-            </ul>
+<section class="studio-explorer" data-explorer>
+    <aside class="studio-explorer__catalog" aria-label="Catálogo de componentes">
+        <div class="studio-explorer__toolbar">
+            <label class="developer-search"><span>Buscar</span><input type="search" data-explorer-search placeholder="button, clickable, boolean..." autocomplete="off"></label>
+            <div class="studio-explorer__filters">
+                <label>Category<select data-explorer-filter="category"><option value="">All</option><?php foreach ($filters['categories'] as $category): ?><option value="<?= esc(strtolower($category)) ?>"><?= esc($category) ?></option><?php endforeach ?></select></label>
+                <label>Capability<select data-explorer-filter="capability"><option value="">All</option><?php foreach ($filters['capabilities'] as $capability): ?><option value="<?= esc(strtolower($capability)) ?>"><?= esc($capability) ?></option><?php endforeach ?></select></label>
+                <label>Property type<select data-explorer-filter="propertyType"><option value="">All</option><?php foreach ($filters['types'] as $type): ?><option value="<?= esc(strtolower($type)) ?>"><?= esc($type) ?></option><?php endforeach ?></select></label>
+            </div>
+            <p data-explorer-status aria-live="polite"><?= count($components) ?> component(s).</p>
         </div>
-    </article>
 
-    <article class="to-card" data-runtime-searchable="kernel <?= esc($kernelClass) ?>">
-        <header class="to-card__header">
-            <p class="eyebrow">Runtime Core</p>
-            <h2>Kernel</h2>
-        </header>
-        <div class="to-card__body">
-            <dl class="developer-metadata">
-                <div><dt>Implementation</dt><dd><code><?= esc($kernelClass) ?></code></dd></div>
-                <div><dt>Version</dt><dd><?= esc($runtimeVersion) ?></dd></div>
-                <div><dt>Workspace</dt><dd>Explorer</dd></div>
-            </dl>
+        <div class="studio-explorer__list">
+            <?php foreach ($components as $index => $component): ?>
+                <?php $propertyTypes = array_map(static fn (array $property): string => strtolower((string) ($property['type'] ?? '')), $component['properties'] ?? []); ?>
+                <button type="button" class="studio-explorer-item <?= $index === 0 ? 'is-active' : '' ?>" data-explorer-item data-component-index="<?= $index ?>" data-search="<?= esc($component['searchText']) ?>" data-category="<?= esc(strtolower((string) ($component['category'] ?? ''))) ?>" data-capabilities="<?= esc(strtolower(implode(' ', $component['capabilities'] ?? []))) ?>" data-property-types="<?= esc(implode(' ', $propertyTypes)) ?>">
+                    <span class="studio-explorer-item__icon"><?= esc(strtoupper(substr($component['title'], 0, 1))) ?></span>
+                    <span><strong><?= esc($component['title']) ?></strong><small><?= esc($component['identity']) ?></small></span>
+                    <span class="studio-explorer-item__count"><?= count($component['properties'] ?? []) ?></span>
+                </button>
+            <?php endforeach ?>
         </div>
-    </article>
-</section>
+    </aside>
 
-<section class="content-panel" id="runtime-components">
-    <div class="section-heading">
-        <div>
-            <p class="eyebrow">Component Registry</p>
-            <h2>Components</h2>
-            <p>Catálogo visual generado a partir de los descriptores públicos del Runtime Kernel.</p>
-        </div>
-    </div>
-
-    <div class="developer-card-grid">
-        <?php foreach ($descriptors as $descriptor): ?>
-            <?php $component = $descriptor->toArray(); ?>
-            <article class="to-card" data-runtime-searchable="<?= esc(json_encode($component)) ?>">
-                <header class="to-card__header">
-                    <p class="eyebrow"><?= esc($component['category'] ?? 'Component') ?></p>
-                    <h2><?= esc($component['displayName'] ?? $component['type']) ?></h2>
+    <article class="studio-explorer__detail" data-explorer-detail>
+        <?php foreach ($components as $index => $component): ?>
+            <section class="studio-component-detail" data-component-detail="<?= $index ?>" <?= $index === 0 ? '' : 'hidden' ?>>
+                <header class="studio-component-detail__header">
+                    <div><p class="eyebrow"><?= esc($component['category'] ?? 'Component') ?></p><h2><?= esc($component['title']) ?></h2><p><?= esc($component['summary']) ?></p></div>
+                    <?php if ($component['version']): ?><?= view('components/ui/badge', ['label' => 'Since ' . $component['version'], 'variant' => 'info']) ?><?php endif ?>
                 </header>
-                <div class="to-card__body">
-                    <dl class="developer-metadata">
-                        <div><dt>Type</dt><dd><code><?= esc($component['type']) ?></code></dd></div>
-                        <div><dt>Capabilities</dt><dd><?= esc(implode(', ', $component['capabilities'] ?? [])) ?: 'None' ?></dd></div>
-                        <div><dt>Slots</dt><dd><?= esc(implode(', ', $component['slots'] ?? [])) ?: 'None' ?></dd></div>
-                    </dl>
 
-                    <h3>Properties</h3>
-                    <div class="developer-properties">
-                        <?php foreach (($component['properties'] ?? []) as $property): ?>
-                            <div>
-                                <strong><?= esc($property['label'] ?? $property['name']) ?></strong>
-                                <code><?= esc($property['type']) ?></code>
-                                <small><?= ! empty($property['required']) ? 'Required' : 'Optional' ?></small>
-                            </div>
-                        <?php endforeach ?>
-                    </div>
-
-                    <details class="developer-json">
-                        <summary>Ver descriptor</summary>
-                        <pre><?= esc(json_encode($component, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) ?></pre>
-                    </details>
+                <div class="studio-component-detail__grid">
+                    <section class="to-card"><header class="to-card__header"><h3>General</h3></header><div class="to-card__body"><dl class="developer-metadata">
+                        <div><dt>Identity</dt><dd><code><?= esc($component['identity']) ?></code></dd></div><div><dt>Class</dt><dd><code><?= esc($component['class']) ?></code></dd></div><div><dt>View</dt><dd><code><?= esc($component['view']) ?></code></dd></div><div><dt>Slots</dt><dd><?= esc(implode(', ', $component['slots'] ?? [])) ?: 'None' ?></dd></div>
+                    </dl></div></section>
+                    <section class="to-card"><header class="to-card__header"><h3>Live preview</h3></header><div class="to-card__body studio-component-preview"><?php if (! empty($component['preview']['view'])): ?><?= view($component['preview']['view'], $component['preview']['data']) ?><?php else: ?><p>Preview not available.</p><?php endif ?></div></section>
                 </div>
-            </article>
-        <?php endforeach ?>
-    </div>
-</section>
 
-<section class="content-panel" id="runtime-catalogs">
-    <div class="section-heading">
-        <div>
-            <p class="eyebrow">Semantic Catalogs</p>
-            <h2>Runtime Inventory</h2>
-            <p>Resumen de tipos, capacidades, metadatos, relaciones y conocimiento disponibles.</p>
-        </div>
-    </div>
+                <section class="to-card"><header class="to-card__header"><h3>Properties</h3></header><div class="to-card__body"><div class="developer-properties"><?php foreach (($component['properties'] ?? []) as $property): ?><div><strong><?= esc($property['label'] ?? $property['name']) ?></strong><code><?= esc($property['type']) ?></code><small><?= ! empty($property['required']) ? 'Required' : 'Optional' ?></small></div><?php endforeach ?></div></div></section>
 
-    <div class="developer-card-grid">
-        <?php foreach ([
-            'Capabilities' => $capabilityCatalog,
-            'Types' => $typeCatalog,
-            'Metadata' => $metadataCatalog,
-            'Relationships' => $relationshipCatalog,
-            'Knowledge' => $knowledgeCatalog,
-        ] as $label => $catalog): ?>
-            <article class="to-card" data-runtime-searchable="<?= esc($label . ' ' . json_encode($catalog)) ?>">
-                <header class="to-card__header">
-                    <p class="eyebrow">Catalog</p>
-                    <h2><?= esc($label) ?></h2>
-                </header>
-                <div class="to-card__body">
-                    <p><strong><?= count($catalog) ?></strong> registro(s) disponibles.</p>
-                    <details class="developer-json">
-                        <summary>Inspeccionar catálogo</summary>
-                        <pre><?= esc(json_encode($catalog, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) ?></pre>
-                    </details>
-                </div>
-            </article>
+                <section class="studio-component-detail__grid">
+                    <section class="to-card"><header class="to-card__header"><h3>Capabilities</h3></header><div class="to-card__body"><div class="studio-chip-list"><?php foreach (($component['capabilities'] ?? []) as $capability): ?><span>✓ <?= esc($capability) ?></span><?php endforeach ?></div></div></section>
+                    <section class="to-card"><header class="to-card__header"><h3>Relationships</h3></header><div class="to-card__body"><?php if (empty($component['relationships'])): ?><p>No explicit relationships registered.</p><?php else: ?><div class="developer-properties"><?php foreach ($component['relationships'] as $relationship): ?><div><strong><?= esc($relationship['source']) ?></strong><code><?= esc($relationship['type']) ?></code><small><?= esc($relationship['target']) ?></small></div><?php endforeach ?></div><?php endif ?></div></section>
+                </section>
+
+                <details class="developer-json"><summary>Inspect full descriptor</summary><pre><?= esc(json_encode($component, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) ?></pre></details>
+            </section>
         <?php endforeach ?>
-    </div>
+    </article>
 </section>
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
 <script>
 (() => {
-    const input = document.getElementById('runtime-search');
-    const status = document.getElementById('runtime-search-status');
-    const items = Array.from(document.querySelectorAll('[data-runtime-searchable]'));
-
-    if (!input || !status) return;
-
-    input.addEventListener('input', () => {
-        const query = input.value.trim().toLowerCase();
-        let visible = 0;
-
+    const root = document.querySelector('[data-explorer]'); if (!root) return;
+    const search = root.querySelector('[data-explorer-search]');
+    const status = root.querySelector('[data-explorer-status]');
+    const items = Array.from(root.querySelectorAll('[data-explorer-item]'));
+    const details = Array.from(root.querySelectorAll('[data-component-detail]'));
+    const filters = Array.from(root.querySelectorAll('[data-explorer-filter]'));
+    const select = (item) => { items.forEach((candidate) => candidate.classList.toggle('is-active', candidate === item)); details.forEach((detail) => { detail.hidden = detail.dataset.componentDetail !== item.dataset.componentIndex; }); };
+    const applyFilters = () => {
+        const query = search.value.trim().toLowerCase();
+        const values = Object.fromEntries(filters.map((filter) => [filter.dataset.explorerFilter, filter.value]));
+        let visible = 0; let firstVisible = null;
         items.forEach((item) => {
-            const matches = query === '' || (item.dataset.runtimeSearchable || '').toLowerCase().includes(query);
-            item.hidden = !matches;
-            if (matches) visible += 1;
+            const matches = (!query || item.dataset.search.includes(query)) && (!values.category || item.dataset.category === values.category) && (!values.capability || item.dataset.capabilities.includes(values.capability)) && (!values.propertyType || item.dataset.propertyTypes.includes(values.propertyType));
+            item.hidden = !matches; if (matches) { visible += 1; firstVisible ||= item; }
         });
-
-        status.textContent = query === ''
-            ? 'Mostrando todo el Runtime.'
-            : `${visible} resultado(s) para “${input.value.trim()}”.`;
-    });
+        status.textContent = `${visible} component(s).`;
+        const active = items.find((item) => item.classList.contains('is-active') && !item.hidden);
+        if (!active && firstVisible) select(firstVisible);
+        if (!firstVisible) details.forEach((detail) => { detail.hidden = true; });
+    };
+    items.forEach((item) => item.addEventListener('click', () => select(item)));
+    search.addEventListener('input', applyFilters);
+    filters.forEach((filter) => filter.addEventListener('change', applyFilters));
 })();
 </script>
 <?= $this->endSection() ?>
